@@ -54,6 +54,8 @@ const handleSubmit = async (values, actions) => {
       values.longitud = response.lng;
       //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
       // y/o hacer alguna otra accion
+      alert(JSON.stringify(values, null, 2));
+      actions.resetForm();
     } catch (err) {
       actions.setFieldError('direccion', 'Error al geolocalizar la dirección');
     }

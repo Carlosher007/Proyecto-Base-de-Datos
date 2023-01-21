@@ -10,16 +10,12 @@ const LoginT = () => {
   const navigate = useNavigate();
   return (
     <Formik
-      initialValues={{ username: '', password: '' }}
+      initialValues={{ email: '', password: '' }}
       validationSchema={Yup.object({
-        username: Yup.string()
-          .required('Username required!')
-          .min(6, 'Username too short!')
-          .max(28, 'Username too long!'),
+        email: Yup.string()
+          .required('Email requerido!'),
         password: Yup.string()
-          .required('Password required!')
-          .min(6, 'Password too short!')
-          .max(28, 'Password too long!'),
+          .required('Contraseña requerida!'),
       })}
       onSubmit={(values, actions) => {
         alert(JSON.stringify(values, null, 2));
@@ -36,10 +32,10 @@ const LoginT = () => {
       >
         <Heading>Log In</Heading>
         <TextField
-          name='username'
-          placeholder='Enter username'
+          name='email'
+          placeholder='Enter email'
           autoComplete='off'
-          label='Username'
+          label='Email'
         />
 
         <TextField

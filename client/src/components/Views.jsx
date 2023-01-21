@@ -6,8 +6,10 @@ import LoginT from '../pages/auth/LoginT';
 import RegistroT from '../pages/auth/RegistroT';
 import LoginC from '../pages/auth/LoginC';
 import RegistroC from '../pages/auth/RegistroC';
+import a from '../pages/a';
 
 const Views = () => {
+  
   return (
     <Routes>
       <Route path='/' element={<Inicio />} />

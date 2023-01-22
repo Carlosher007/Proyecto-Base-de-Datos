@@ -3,23 +3,41 @@
 import { Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
-import * as Yup from 'yup';
 import TextField from '../../components/TextField';
+import { formSchemaLoginT } from '@project-mande/common';
 
 const LoginT = () => {
   const navigate = useNavigate();
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      validationSchema={Yup.object({
-        email: Yup.string()
-          .required('Email requerido!'),
-        password: Yup.string()
-          .required('Contraseña requerida!'),
-      })}
+      validationSchema={formSchemaLoginT}
       onSubmit={(values, actions) => {
-        alert(JSON.stringify(values, null, 2));
+        // alert(JSON.stringify(values, null, 2));
+        // actions.resetForm();
+        const vals = { ...values };
         actions.resetForm();
+        fetch('http://localhost:4000/auth/loginT', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(vals),
+        })
+          .catch((err) => {
+            return;
+          })
+          .then((res) => {
+            if (!res || !res.ok || res.status >= 400) {
+              return;
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (!data) return;
+            console.log(data);
+          });
       }}
     >
       <VStack

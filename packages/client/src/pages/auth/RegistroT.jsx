@@ -4,18 +4,22 @@ import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
-import * as Yup from 'yup';
 import TextField from '../../components/TextField';
 import FileUpload from '../../components/FileUpload';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
+import Alert from '@material-ui/lab/Alert';
+import { formSchemaRegistroT } from "@project-mande/common";
 
 const RegistroT = () => {
   const [direccion, setDireccion] = useState('');
+  const [openAlert, setOpenAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleChange = (e) => {
     setDireccion(e.target.value);
   };
-  console.log(direccion)
+  // console.log(direccion);
 
   const geocodeAddress = async (address) => {
     try {
@@ -42,26 +46,59 @@ const RegistroT = () => {
   };
 
 
-const handleSubmit = async (values, actions) => {
-  if (direccion) {
-    try {
-      const response = await geocodeAddress(direccion);
-      if (response.error) {
-        actions.setFieldError('direccion  ', response.error);
-        return;
+  const handleSubmit = async (values, actions) => {
+    if (direccion) {
+      try {
+        const response = await geocodeAddress(direccion);
+        if (response.error) {
+          actions.setFieldError('direccion  ', response.error);
+          if (response.error) {
+            setOpenAlert(true);
+            setTimeout(() => {
+              setOpenAlert(false);
+            }, 3000);
+            setErrorMessage(response.error);
+            return;
+          }
+          return;
+        }
+        values.latitud = response.lat;
+        values.longitud = response.lng;
+        //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
+        // y/o hacer alguna otra accion
+        // alert(JSON.stringify(values, null, 2));
+        const vals = { ...values };
+        setDireccion('');
+        // actions.resetForm();
+        fetch('http://localhost:4000/auth/registroT', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(vals),
+        })
+          .catch((err) => {
+            return;
+          })
+          .then((res) => {
+            if (!res || !res.ok || res.status >= 400) {
+              return;
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (!data) return;
+            console.log(data);
+          });
+      } catch (err) {
+        actions.setFieldError(
+          'direccion',
+          'Error al geolocalizar la dirección'
+        );
       }
-      values.latitud = response.lat;
-      values.longitud = response.lng;
-      //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
-      // y/o hacer alguna otra accion
-      alert(JSON.stringify(values, null, 2));
-      actions.resetForm();
-    } catch (err) {
-      actions.setFieldError('direccion', 'Error al geolocalizar la dirección');
     }
-  }
-};
-
+  };
 
   const navigate = useNavigate();
   return (
@@ -78,32 +115,7 @@ const handleSubmit = async (values, actions) => {
         longitud: '',
         latitud: '',
       }}
-      validationSchema={Yup.object({
-        nombre: Yup.string()
-          .required('Nombre requerido!')
-          .min(6, 'Nombre demasiado corto!')
-          .max(28, 'Nombre demasiado largo!'),
-        apellido: Yup.string()
-          .required('Apellido requerido!')
-          .min(6, 'Apellido demasiado corto!')
-          .max(28, 'Apellido demasiado largo!'),
-        email: Yup.string()
-          .email('Email inválido')
-          .required('Email requerido!'),
-        password: Yup.string()
-          .required('Contraseña requerida!')
-          .min(6, 'Contraseña demasiado corta!')
-          .max(28, 'Contraseña demasiado larga!'),
-        foto_perfil: Yup.string().required('Foto de perfil requerida!'),
-        doc_foto: Yup.string().required('Foto de documento requerida!'),
-        num_cuenta: Yup.string()
-          .required('Numero de cuenta requerido!')
-          .min(8, 'Numero de cuenta demasiado corto!')
-          .max(28, 'Numero de cuenta demasiado largo!'),
-        // direccion: Yup.string()
-        //   .isValidAddress('La dirección ingresada es inválida')
-        //   .required('Direccion requerida!'),
-      })}
+      validationSchema={formSchemaRegistroT}
       onSubmit={handleSubmit}
     >
       <VStack
@@ -154,6 +166,11 @@ const handleSubmit = async (values, actions) => {
           value={direccion}
           onChange={handleChange}
         />
+        {openAlert && (
+          <Alert severity='error' onClose={() => setOpenAlert(false)}>
+            {errorMessage}
+          </Alert>
+        )}
         <ButtonGroup pt='1rem'>
           <Button colorScheme='teal' type='submit'>
             Create Account

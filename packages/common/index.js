@@ -12,21 +12,22 @@ const formSchemaRegistroT = Yup.object({
     .min(6, 'Apellido demasiado corto!')
     .max(28, 'Apellido demasiado largo!'),
   email: Yup.string().email('Email inválido').required('Email requerido!'),
-  password: Yup.string()
+  contrasena: Yup.string()
     .required('Contraseña requerida!')
     .min(6, 'Contraseña demasiado corta!')
     .max(28, 'Contraseña demasiado larga!'),
   foto_perfil: Yup.string().required('Foto de perfil requerida!'),
   doc_foto: Yup.string().required('Foto de documento requerida!'),
-  num_cuenta: Yup.string()
+  cuenta: Yup.string()
     .required('Numero de cuenta requerido!')
     .min(8, 'Numero de cuenta demasiado corto!')
     .max(28, 'Numero de cuenta demasiado largo!'),
   direccion: Yup.string().required('Direccion requerida!'),
+  celular: Yup.string().required('Celular requerido!'),
 });
 
 const formSchemaLoginT = Yup.object({
-  email: Yup.string().required('Email requerido!'),
+  celular: Yup.string().required('Celular requerido!'),
   password: Yup.string().required('Contraseña requerida!'),
 });
 

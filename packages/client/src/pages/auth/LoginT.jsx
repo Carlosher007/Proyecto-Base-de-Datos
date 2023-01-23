@@ -10,7 +10,7 @@ const LoginT = () => {
   const navigate = useNavigate();
   return (
     <Formik
-      initialValues={{ email: '', password: '' }}
+      initialValues={{ celular: '', contrasena: '' }}
       validationSchema={formSchemaLoginT}
       onSubmit={(values, actions) => {
         // alert(JSON.stringify(values, null, 2));
@@ -50,17 +50,17 @@ const LoginT = () => {
       >
         <Heading>Log In</Heading>
         <TextField
-          name='email'
-          placeholder='Enter email'
+          name='celular'
+          placeholder='Digite el celular'
           autoComplete='off'
-          label='Email'
+          label='Celular'
         />
 
         <TextField
-          name='password'
-          placeholder='Enter password'
+          name='contrasena'
+          placeholder='Digite la contraseña'
           autoComplete='off'
-          label='Password'
+          label='Contraseña'
         />
 
         <ButtonGroup pt='1rem'>

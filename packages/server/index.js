@@ -5,9 +5,11 @@ const { Server } = require('socket.io');
 const app = express();
 const helmet = require('helmet'); // es un paquete de seguridad que agrega varios encabezados HTTP de seguridad a las respuestas del servidor para proteger contra ataques comunes.
 const cors = require('cors'); //es un middleware que permite que el servidor acepte solicitudes desde dominios diferentes. En este caso, está configurado para aceptar solicitudes desde "http://localhost:3000" y habilitando las credenciales.
+const session = require("express-session")
 const authRouter = require('./routes/authRouter'); //este es un enrutador personalizado para manejar las solicitudes relacionadas con la autenticación.
 const morgan = require('morgan');
 const taskRoutes = require('./routes/tasks.routes');
+require('dotenv').config();
 
 const server = require('http').createServer(app);
 
@@ -27,6 +29,21 @@ app.use(cors({
 
 app.use(morgan('dev'));
 app.use(express.json());
+
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    credentials: true,
+    name: 'sid',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.ENVIRONMENT === 'production',
+      httpOnly: true,
+      sameSite: process.env.ENVIRONMENT === 'production' ? 'none' : 'lax',
+    },
+  })
+);
 
 app.use("/auth", authRouter);
 app.use(taskRoutes);

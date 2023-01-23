@@ -40,7 +40,6 @@ const RegistroT = () => {
     }
   };
 
-
   const handleSubmit = async (values, actions) => {
     const direccion = values.direccion;
     if (direccion) {
@@ -63,7 +62,7 @@ const RegistroT = () => {
         //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
-        actions.resetForm();
+        // actions.resetForm();
         fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',
           credentials: 'include',
@@ -103,13 +102,14 @@ const RegistroT = () => {
         nombre: '',
         apellido: '',
         email: '',
-        password: '',
+        contrasena: '',
         foto_perfil: '',
         doc_foto: '',
-        num_cuenta: '',
+        cuenta: '',
         direccion: '',
         longitud: '',
         latitud: '',
+        celular: '',
       }}
       validationSchema={formSchemaRegistroT}
       onSubmit={handleSubmit}
@@ -124,36 +124,42 @@ const RegistroT = () => {
         <Heading>Sign Up</Heading>
         <TextField
           name='nombre'
-          placeholder='Enter nombre'
+          placeholder='Digite el nombre'
           autoComplete='off'
           label='Nombre'
         />
         <TextField
           name='apellido'
-          placeholder='Enter apellido'
+          placeholder='Digite el apellido'
           autoComplete='off'
           label='Apellido'
         />
         <TextField
           name='email'
-          placeholder='Enter email'
+          placeholder='Digite el email'
           autoComplete='off'
           label='Email'
         />
         <TextField
           type='password'
-          name='password'
-          placeholder='Enter password'
+          name='contrasena'
+          placeholder='Digite la contraseña'
           autoComplete='off'
-          label='Password'
+          label='Contrasena'
         />
         <FileUpload name='foto_perfil' label='Foto de perfil' />
         <FileUpload name='doc_foto' label='Foto de documento' />
         <TextField
-          name='num_cuenta'
-          placeholder='Enter numero de cuenta'
+          name='cuenta'
+          placeholder='Digite el numero de cuenta'
           autoComplete='off'
           label='Numero de cuenta'
+        />
+        <TextField
+          name='celular'
+          placeholder='Digite el celular'
+          autoComplete='off'
+          label='Numero de celular'
         />
         <TextField
           name='direccion'

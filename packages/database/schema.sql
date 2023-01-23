@@ -1,4 +1,3 @@
-\c mande
 
 CREATE TABLE Coordenada (
   coor_id SERIAL PRIMARY KEY,
@@ -39,7 +38,7 @@ CREATE TABLE Trabajador (
     disponible BOOLEAN,
     calificacion INTEGER,
     doc_foto VARCHAR(255) UNIQUE NOT NULL,
-    cuenta VARCHAR(255) NOT NULL,
+    cuenta VARCHAR(255) UNIQUE NOT NULL,
     user_id INTEGER REFERENCES Usuario(user_id) UNIQUE NOT NULL
 );
 
@@ -144,6 +143,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
 --Verificar que un email este en uso, devuelve true si esta en uso
 CREATE OR REPLACE FUNCTION verificar_email(email VARCHAR(255)) RETURNS BOOLEAN AS $$
 DECLARE email_en_uso BOOLEAN;
@@ -154,42 +154,52 @@ END;
 $$ LANGUAGE plpgsql;
 
 --Verificar loguin de trabajador
-CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_trabajador(celular VARCHAR(255), contrasena VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
-  -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
-  SELECT trabajador_id FROM Trabajador WHERE user_id = user_id;
+  -- Consultar en la tabla Usuario si existe un trabajador con el celular y contraseña especificados
+  SELECT user_id FROM Usuario WHERE celular = celular AND contrasena = contrasena;
   IF FOUND THEN
-    RETURN trabajador_id;
+      -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
+      SELECT trabajador_id FROM Trabajador WHERE user_id = user_id;
+      IF FOUND THEN
+        RETURN trabajador_id;
+      ELSE
+        RETURN -1;
+      END IF;
   ELSE
-    RETURN -1;
+      RETURN -1;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 --Verificar loguin de cliente
-CREATE OR REPLACE FUNCTION verificar_login_cliente(user_id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_cliente(celular VARCHAR(255), contrasena VARCHAR(255)) RETURNS INTEGER AS $$
 BEGIN
-  SELECT cliente_id FROM Cliente WHERE user_id = user_id;
+  -- Consultar en la tabla Usuario si existe un trabajador con el celular y contraseña especificados
+  SELECT user_id FROM Usuario WHERE celular = celular AND contrasena = contrasena;
   IF FOUND THEN
-    RETURN cliente_id;
+      -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
+      SELECT cliente_id FROM Cliente WHERE user_id = user_id;
+      IF FOUND THEN
+        RETURN cliente_id;
+      ELSE
+        RETURN -1;
+      END IF;
   ELSE
-    RETURN -1;
+      RETURN -1;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
 
---Verificar que doc_foto este en uso
-CREATE OR REPLACE FUNCTION verificar_doc_foto(doc_foto VARCHAR)
+
+
+--Verificar que una cuenta de trabajador este en uso
+CREATE OR REPLACE FUNCTION verificar_cuenta_trabajador(numero_cuenta VARCHAR(255))
 RETURNS BOOLEAN AS $$
 BEGIN
-    IF (SELECT COUNT(*) FROM Trabajador WHERE doc_foto = doc_foto) > 0 THEN
-        RETURN TRUE;
-    ELSE
-        RETURN FALSE;
-    END IF;
+    RETURN (SELECT EXISTS(SELECT 1 FROM Trabajador WHERE cuenta = numero_cuenta));
 END;
 $$ LANGUAGE plpgsql;
-
 
 --Verificar que un celular este en uso
 CREATE OR REPLACE FUNCTION verificar_celular(celular VARCHAR(255)) RETURNS BOOLEAN AS $$

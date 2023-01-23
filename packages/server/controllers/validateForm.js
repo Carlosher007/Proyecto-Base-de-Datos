@@ -1,5 +1,5 @@
 /** @format */
-const {formSchemaLoginT,formSchemaRegistroT} = require("@project-mande/common");
+const {formSchemaLoginT,formSchemaRegistroT} = require("../common/index");
 
 const validateFormLoginT = (req, res) => {
   const formData = req.body;

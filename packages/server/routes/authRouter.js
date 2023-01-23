@@ -77,10 +77,14 @@ router.post('/loginT', async (req, res) => {
 router.post('/registroT', async (req, res) => {
   validateFormRegisterT(req, res);
 
+  console.log("se valido con node")
+  
   //Verificamos los valores unicos
   const celularExiste = await pool.query('SELECT verificar_celular($1)', [
     req.body.celular,
   ]);
+
+  console.log("paso primer test de verificar_celular")
 
   if (celularExiste.rows[0].verificar_celular) {
     res.json({ loggedIn: false, status: 'Celular ya está en uso' });

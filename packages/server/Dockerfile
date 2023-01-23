@@ -1,5 +1,13 @@
 FROM node:18-alpine3.15
 
-WORKDIR /backend
+WORKDIR /server
 
-COPY ./package.json /backend
+COPY ./package.json /server
+
+RUN yarn
+
+COPY . .
+
+CMD ["yarn","start"]
+
+

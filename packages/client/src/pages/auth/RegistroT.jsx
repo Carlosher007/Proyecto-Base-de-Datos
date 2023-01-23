@@ -12,14 +12,9 @@ import Alert from '@material-ui/lab/Alert';
 import { formSchemaRegistroT } from "@project-mande/common";
 
 const RegistroT = () => {
-  const [direccion, setDireccion] = useState('');
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (e) => {
-    setDireccion(e.target.value);
-  };
-  // console.log(direccion);
 
   const geocodeAddress = async (address) => {
     try {
@@ -47,6 +42,7 @@ const RegistroT = () => {
 
 
   const handleSubmit = async (values, actions) => {
+    const direccion = values.direccion;
     if (direccion) {
       try {
         const response = await geocodeAddress(direccion);
@@ -65,12 +61,10 @@ const RegistroT = () => {
         values.latitud = response.lat;
         values.longitud = response.lng;
         //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
-        // y/o hacer alguna otra accion
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
-        setDireccion('');
-        // actions.resetForm();
-        fetch('http://localhost:4000/auth/registroT', {
+        actions.resetForm();
+        fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -100,6 +94,8 @@ const RegistroT = () => {
     }
   };
 
+
+  
   const navigate = useNavigate();
   return (
     <Formik
@@ -163,8 +159,9 @@ const RegistroT = () => {
           name='direccion'
           placeholder='Ingresa tu dirección'
           label='Dirección'
-          value={direccion}
-          onChange={handleChange}
+          autoComplete='off'
+          // value={direccion}
+          // onChange={handleChange}
         />
         {openAlert && (
           <Alert severity='error' onClose={() => setOpenAlert(false)}>

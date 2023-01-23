@@ -17,7 +17,7 @@ const LoginT = () => {
         // actions.resetForm();
         const vals = { ...values };
         actions.resetForm();
-        fetch('http://localhost:4000/auth/loginT', {
+        fetch('http://localhost:8000/auth/loginT', {
           method: 'POST',
           credentials: 'include',
           headers: {

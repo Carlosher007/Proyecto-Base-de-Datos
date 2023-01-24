@@ -10,11 +10,17 @@ const bycrypt = require('bcrypt');
 router.post('/loginT', async (req, res) => {
   validateFormLoginT(req, res);
 
-  
   const potentialLogin = await pool.query(
     'SELECT user_id, contrasena, celular FROM Usuario u WHERE u.celular = $1',
     [req.body.celular]
   );
+
+  
+  console.log('SIUUUUU 1');
+
+  console.log(potentialLogin.rowCount>0);
+
+
 
   if (potentialLogin.rowCount > 0) {
     const isSamePass = await bcrypt.compare(
@@ -22,6 +28,10 @@ router.post('/loginT', async (req, res) => {
       potentialLogin.rows[0].contrasena
     );
 
+  console.log('SIUUUUU 2');
+
+
+    let responseSent = false;
     if (isSamePass) {
       //verificamos que ese login pertenezca a un trabajador
       const consultatrabajadorId = await pool.query(
@@ -45,32 +55,29 @@ router.post('/loginT', async (req, res) => {
           apellido,
           foto_perfil,
         };
-        res.json({
-          loggedIn: true,
-          trabajadorId: newTrabajador[0].crear_trabajador,
-        });
+        // res.json({
+        //   loggedIn: true,
+        //   trabajadorId: newTrabajador[0].crear_trabajador,
+        // });
         console.log('good');
-      } else {
-        //not good login
-        res.json({
-          loggedIn: false,
-          status: 'Error en la contraseña o el celular',
-        });
-        console.log('not good');
+        responseSent = true;
+        return;
       }
-    } else {
-      //not good loggin
-      res.json({
-        loggedIn: false,
-        status: 'Error en la contraseña o el celular',
-      });
+    }
+    if (!responseSent) {
+      // res.json({
+      //   loggedIn: false,
+      //   status: 'Error en la contraseña o el celular',
+      // });
       console.log('not good');
+        return;
     }
   } else {
     res.json({
       loggedIn: false,
       status: 'Error en la contraseña o el celular',
     });
+
     console.log('not good');
   }
 });
@@ -78,65 +85,54 @@ router.post('/loginT', async (req, res) => {
 router.post('/registroT', async (req, res) => {
   validateFormRegisterT(req, res);
 
-  console.log("se valido con node")
-  
   //Verificamos los valores unicos
   const celularExiste = await pool.query('SELECT verificar_celular($1)', [
     req.body.celular,
   ]);
 
-  console.log("paso primer test de verificar_celular")
+  console.log('paso primer test de verificar_celular');
 
+  let responseSent = false;
   if (celularExiste.rows[0].verificar_celular) {
     res.json({ loggedIn: false, status: 'Celular ya está en uso' });
-  } else {
+    responseSent = true;
+  }
+  if (!responseSent) {
     const emailExiste = await pool.query('SELECT verificar_email($1)', [
       req.body.email,
     ]);
-
     if (emailExiste.rows[0].verificar_email) {
       res.json({ loggedIn: false, status: 'Email ya está en uso' });
     } else {
-      const docFotoExiste = await pool.query('SELECT verificar_doc_foto($1)', [
-        req.body.doc_foto,
-      ]);
-
-      if (docFotoExiste.rows[0].verificar_doc_foto) {
-        res.json({
-          loggedIn: false,
-          status: 'Foto del documento ya está en uso',
-        });
-      } else {
-        //Registramos
-        const hashedPass = await bycrypt.hash(req.body.contrasena, 10);
-        const newTrabajador = await pool.query(
-          'SELECT crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-          [
-            req.body.nombre,
-            req.body.apellido,
-            req.body.email,
-            hashedPass,
-            req.body.latitud,
-            req.body.longitud,
-            req.body.direccion,
-            req.body.foto_perfil,
-            req.body.doc_foto,
-            req.body.cuenta,
-            req.body.celular,
-          ]
-        );
-        console.log(newTrabajador.rows[0].crear_trabajador);
-        req.session.user = {
-          id: newTrabajador.rows[0].crear_trabajador,
-          nombre: req.body.nombre,
-          apellido: req.body.apellido,
-          foto_perfil: req.body.foto_perfil,
-        };
-        res.json({
-          loggedIn: true,
-          trabajadorId: newTrabajador[0].crear_trabajador,
-        });
-      }
+      //Registramos
+      const hashedPass = await bycrypt.hash(req.body.contrasena, 10);
+      const newTrabajador = await pool.query(
+        'SELECT crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+        [
+          req.body.nombre,
+          req.body.apellido,
+          req.body.email,
+          hashedPass,
+          req.body.latitud,
+          req.body.longitud,
+          req.body.direccion,
+          req.body.foto_perfil,
+          req.body.doc_foto,
+          req.body.cuenta,
+          req.body.celular,
+        ]
+      );
+      console.log(newTrabajador.rows[0].crear_trabajador);
+      req.session.user = {
+        id: newTrabajador.rows[0].crear_trabajador,
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        foto_perfil: req.body.foto_perfil,
+      };
+      res.json({
+        loggedIn: true,
+        trabajadorId: newTrabajador[0].crear_trabajador,
+      });
     }
   }
 });

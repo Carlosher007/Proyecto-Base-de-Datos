@@ -1,6 +1,7 @@
 FROM node:18-alpine3.15
 
+COPY . /server
 WORKDIR /server
-COPY . .
+RUN npm install bcrypt
 RUN npm install
-CMD ["npm","dev"]
+CMD ["npm","run","dev"]

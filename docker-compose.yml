@@ -19,8 +19,6 @@ services:
       - database
     build:
       context: ./packages/server
-    volumes:
-      - ./packages/server:/server
     ports:
       - 8000:8000
     networks:

@@ -10,7 +10,6 @@ services:
       - POSTGRES_PASSWORD=db_mande_project123
     volumes:
       - ./packages/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      # - ./docker_composeTest/database/data:/var/lib/postgresql/data
     networks:
       - mande_network
 
@@ -26,17 +25,6 @@ services:
       - 8000:8000
     networks:
       - mande_network
-
-# frontend:
-#    depends_on:
-#      - backend
-#    build:
-#      context: ./frontend
-#    volumes:
-#      - ./frontend:/frontend
-#    ports:3000:3000
-    # networks:
-    #   - mande_network
 
 networks:
   mande_network:

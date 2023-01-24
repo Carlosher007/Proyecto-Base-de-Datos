@@ -1,25 +1,24 @@
 {
-  "name": "@project-mande/server",
+  "name": "server",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node ./index.js",
-    "dev": "yarn dev ./index.js"
-  },
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^8.2.0",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "helmet": "^6.0.1",
+    "helmet": "^4.1.1",
     "morgan": "^1.10.0",
-    "pg": "^8.8.0",
-    "socket.io": "^4.5.4",
+    "pg": "^8.4.1",
+    "socket.io": "^3.0.3",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.4"
   }
 }

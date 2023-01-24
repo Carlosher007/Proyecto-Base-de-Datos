@@ -10,6 +10,7 @@ const bycrypt = require('bcrypt');
 router.post('/loginT', async (req, res) => {
   validateFormLoginT(req, res);
 
+  
   const potentialLogin = await pool.query(
     'SELECT user_id, contrasena, celular FROM Usuario u WHERE u.celular = $1',
     [req.body.celular]

@@ -63,7 +63,7 @@ const RegistroT = () => {
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
         // actions.resetForm();
-        fetch('http://localhost:8000/auth/registroT', {
+        fetch('http://backend:8000/auth/registroT', {
           method: 'POST',
           credentials: 'include',
           headers: {

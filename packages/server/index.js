@@ -15,7 +15,7 @@ const server = require('http').createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://frontend:3000',
     credentials: true,
   },
 }); // es una instancia de socket.io, que es una biblioteca que permite la comunicación en tiempo real entre el cliente y el servidor.
@@ -23,7 +23,7 @@ const io = new Server(server, {
 app.use(helmet());
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "http://frontend:3000",
   credentials: true, 
 })); 
 

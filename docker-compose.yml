@@ -24,6 +24,17 @@ services:
     networks:
       - mande_network
 
+  frontend:
+    restart: always
+    depends_on: 
+      - backend
+    build: 
+      context: ./packages/client
+    ports:
+      - 3000:3000
+    networks:
+      - mande_network
+
 networks:
   mande_network:
     driver: bridge

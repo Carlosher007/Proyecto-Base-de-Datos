@@ -4,4 +4,4 @@ COPY . /server
 WORKDIR /server
 RUN npm install bcrypt
 RUN npm install
-CMD ["npm","run","dev"]
+CMD ["yarn","dev"]

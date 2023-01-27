@@ -1,5 +1,5 @@
 /** @format */
-const {formSchemaLoginT,formSchemaRegistroT} = require("../common/index");
+const { formSchemaLoginT, formSchemaRegistroT } = require('../common/index');
 
 const validateFormLoginT = (req, res) => {
   const formData = req.body;
@@ -11,7 +11,7 @@ const validateFormLoginT = (req, res) => {
     })
     .then((valid) => {
       if (valid) {
-        res.status(200).send();
+        // res.status(200).send();
         console.log('form is good');
       }
     });
@@ -33,4 +33,4 @@ const validateFormRegisterT = (req, res) => {
     });
 };
 
-module.exports = validateFormLoginT, validateFormRegisterT;
+(module.exports = validateFormLoginT), validateFormRegisterT;

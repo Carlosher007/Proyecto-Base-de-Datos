@@ -154,39 +154,27 @@ END;
 $$ LANGUAGE plpgsql;
 
 --Verificar loguin de trabajador
-CREATE OR REPLACE FUNCTION verificar_login_trabajador(celular VARCHAR(255), contrasena VARCHAR(255)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id INTEGER) RETURNS INTEGER AS $$
 BEGIN
-  -- Consultar en la tabla Usuario si existe un trabajador con el celular y contraseña especificados
-  SELECT user_id FROM Usuario WHERE celular = celular AND contrasena = contrasena;
-  IF FOUND THEN
-      -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
-      SELECT trabajador_id FROM Trabajador WHERE user_id = user_id;
-      IF FOUND THEN
-        RETURN trabajador_id;
-      ELSE
-        RETURN -1;
-      END IF;
-  ELSE
-      RETURN -1;
-  END IF;
+	  -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
+	SELECT trabajador_id FROM Trabajador WHERE user_id = user_id;
+	IF FOUND THEN
+	RETURN trabajador_id;
+ELSE
+	RETURN -1;
+END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 --Verificar loguin de cliente
-CREATE OR REPLACE FUNCTION verificar_login_cliente(celular VARCHAR(255), contrasena VARCHAR(255)) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_cliente(user_id INTEGER) RETURNS INTEGER AS $$
 BEGIN
-  -- Consultar en la tabla Usuario si existe un trabajador con el celular y contraseña especificados
-  SELECT user_id FROM Usuario WHERE celular = celular AND contrasena = contrasena;
+  -- Consultar en la tabla Cliente si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
+  SELECT cliente_id FROM Cliente WHERE user_id = user_id;
   IF FOUND THEN
-      -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
-      SELECT cliente_id FROM Cliente WHERE user_id = user_id;
-      IF FOUND THEN
-        RETURN cliente_id;
-      ELSE
-        RETURN -1;
-      END IF;
+    RETURN cliente_id;
   ELSE
-      RETURN -1;
+    RETURN -1;
   END IF;
 END;
 $$ LANGUAGE plpgsql;

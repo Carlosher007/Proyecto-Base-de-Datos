@@ -7,14 +7,13 @@ import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
 import FileUpload from '../../components/FileUpload';
 import axios from 'axios';
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { formSchemaRegistroT } from "@project-mande/common";
+import { formSchemaRegistroT } from '../../common/index';
 
 const RegistroT = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
 
   const geocodeAddress = async (address) => {
     try {
@@ -63,7 +62,7 @@ const RegistroT = () => {
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
         // actions.resetForm();
-        fetch('http://backend:8000/auth/registroT', {
+        fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -93,8 +92,6 @@ const RegistroT = () => {
     }
   };
 
-
-  
   const navigate = useNavigate();
   return (
     <Formik

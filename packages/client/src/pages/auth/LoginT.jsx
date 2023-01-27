@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
-import { formSchemaLoginT } from '@project-mande/common';
+import { formSchemaLoginT } from '../../common/index';
 
 const LoginT = () => {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const LoginT = () => {
         // alert(JSON.stringify(values, null, 2));
         // actions.resetForm();
         const vals = { ...values };
+        //  console.log(JSON.stringify(vals));
         actions.resetForm();
         fetch('http://localhost:8000/auth/loginT', {
           method: 'POST',

@@ -15,12 +15,7 @@ router.post('/loginT', async (req, res) => {
     [req.body.celular]
   );
 
-  
-  console.log('SIUUUUU 1');
-
   console.log(potentialLogin.rowCount>0);
-
-
 
   if (potentialLogin.rowCount > 0) {
     const isSamePass = await bcrypt.compare(

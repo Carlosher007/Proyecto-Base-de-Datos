@@ -5,6 +5,7 @@
 	margin: 0;
 	box-sizing: border-box;
 	font-family: "Titillium Web", sans-serif;
+	
 }
 
 :root {
@@ -22,6 +23,7 @@ header {
 	padding: 0 2rem;
 	background-color: var(--mainColor);
 	color: var(--textColor);
+	/* margin-bottom: 30px; */
 }
 
 nav a {

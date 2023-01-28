@@ -7,7 +7,7 @@ import ToggleColorMode from './ToggleColorMode.jsx';
 const currentPath = window.location.pathname;
 const isHomePage = /^\/(loginT|registroT)$/.test(currentPath);
 
-function Navbar({condition}) {
+function Navbar({ condition }) {
   const navRef = useRef();
 
   const showNavbar = () => {
@@ -16,8 +16,8 @@ function Navbar({condition}) {
 
   return (
     <header>
-      <ToggleColorMode />
-      {isHomePage || currentPath==="/" ? (
+      {/* <ToggleColorMode /> */}
+      {isHomePage || currentPath === '/' ? (
         <>
           <h3>Titulo</h3>
           <button onClick={() => (window.location.href = '/')}>
@@ -26,7 +26,7 @@ function Navbar({condition}) {
         </>
       ) : (
         <>
-          <h3>NOMBRE</h3>
+          <h3>LOGO</h3>
           <nav ref={navRef}>
             <a href='/#'>Home</a>
             <a href='/#'>My work</a>

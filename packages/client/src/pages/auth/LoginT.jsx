@@ -5,8 +5,12 @@ import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
 import { formSchemaLoginT } from '../../common/index';
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
 
 const LoginT = () => {
+  const { setUser } = useContext(AccountContext);
+
   const navigate = useNavigate();
   return (
     <Formik
@@ -37,7 +41,8 @@ const LoginT = () => {
           })
           .then((data) => {
             if (!data) return;
-            console.log(data);
+            setUser({ ...data });
+            navigate('/dashboardT');
           });
       }}
     >

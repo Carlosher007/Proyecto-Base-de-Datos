@@ -10,8 +10,12 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { formSchemaRegistroT } from '../../common/index';
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
 
 const RegistroT = () => {
+  const { setUser } = useContext(AccountContext);
+
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -81,7 +85,8 @@ const RegistroT = () => {
           })
           .then((data) => {
             if (!data) return;
-            console.log(data);
+            setUser({ ...data });
+            navigate('/dashboardT');
           });
       } catch (err) {
         actions.setFieldError(

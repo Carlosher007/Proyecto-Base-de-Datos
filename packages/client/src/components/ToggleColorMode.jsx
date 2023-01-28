@@ -9,7 +9,7 @@ const ToggleColorMode = () => {
   return (
     <Button
       onClick={() => toggleColorMode()}
-      pos='absolute'
+      // pos='absolute'
       top='0'
       right='0'
       m='1rem'

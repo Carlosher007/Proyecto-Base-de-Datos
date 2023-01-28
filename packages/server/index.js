@@ -40,9 +40,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.ENVIRONMENT === 'production',
+      secure: process.env.ENVIRONMENT === 'production' ? "true" : "auto",
       httpOnly: true,
-      sameSite: process.env.ENVIRONMENT === 'production' ? 'none' : 'lax',
+      expires: 1000 * 60 * 60 * 24 * 7,
+      sameSite: process.env.ENVIRONMENT === 'production'  ? 'none' : 'lax',
     },
   })
 );

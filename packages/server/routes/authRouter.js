@@ -55,6 +55,7 @@ router
       [req.body.celular]
     );
 
+
     console.log(potentialLogin.rowCount > 0);
 
     if (potentialLogin.rowCount > 0) {
@@ -66,19 +67,22 @@ router
       if (isSamePass) {
         //verificamos que ese login pertenezca a un trabajador
         const consultatrabajadorId = await pool.query(
-          'SELECT verificar_login_trabajador($1)',
+          'SELECT * FROM verificar_login_trabajador($1)',
           [potentialLogin.rows[0].user_id]
         );
 
-        const trabajadorId = consultatrabajadorId.rows[0][0];
+        const trabajadorId = consultatrabajadorId.rows[0].id;
 
-        if (trabajadorId != -1) {
+        console.log("trabajadorid",trabajadorId)
+
+        if (trabajadorId !== null) {
+          console.log("trabajador ",trabajadorId)
           //good login
           const trabajadorData = await pool.query(
             'SELECT u.nombre, u.apellido, t.foto_perfil FROM Usuario u JOIN Trabajador t ON u.user_id = t.user_id WHERE t.trabajador_id = $1',
             [trabajadorId]
           );
-          const { nombre, apellido, foto_perfil } = trabajadorData.rows[0];
+          const { nombre, apellido, foto_perfil } = trabajadorData;
           req.session.user = {
             id: trabajadorId,
             nombre,
@@ -87,7 +91,7 @@ router
           };
           res.json({
             loggedIn: true,
-            trabajadorId: newTrabajador[0].crear_trabajador,
+            trabajadorId: trabajadorId,
           });
           console.log('good');
         } else {

@@ -9,8 +9,8 @@ CREATE TABLE Coordenada (
 CREATE TYPE medio_pago_tipo AS ENUM ('Debito', 'Credito');
 
 CREATE TABLE Medio_Pago (
-  medio_pago_id SERIAL PRIMARY KEY,
-  numero_cuenta VARCHAR(255),
+  -- medio_pago_id SERIAL PRIMARY KEY,
+  numero_cuenta VARCHAR(255) PRIMARY KEY,
   tipo medio_pago_tipo NOT NULL
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE Usuario (
 CREATE TABLE Cliente (
     cliente_id SERIAL PRIMARY KEY,
     recibo VARCHAR(255) NOT NULL,
-    numero_cuenta INTEGER REFERENCES Medio_Pago(medio_pago_id) UNIQUE NOT NULL,
+    numero_cuenta VARCHAR(255) REFERENCES Medio_Pago(medio_pago_id) UNIQUE NOT NULL,
     user_id INTEGER REFERENCES Usuario(user_id) UNIQUE NOT NULL
 );
 
@@ -157,23 +157,23 @@ $$ LANGUAGE plpgsql;
 
 
 --Verificar loguin de trabajador
-CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id_ INTEGER) RETURNS TABLE (id INTEGER) AS $$
 BEGIN
 	  -- Consultar en la tabla Trabajador si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
-	SELECT trabajador_id FROM Trabajador WHERE user_id = user_id;
-	IF FOUND THEN
-	RETURN trabajador_id;
-ELSE
-	RETURN -1;
-END IF;
+	SELECT trabajador_id FROM Trabajador WHERE user_id = user_id_ INTO id;
+  IF FOUND THEN
+      RETURN QUERY SELECT id;
+  ELSE
+      RETURN QUERY SELECT NULL::INTEGER as id;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 --Verificar loguin de cliente
-CREATE OR REPLACE FUNCTION verificar_login_cliente(user_id INTEGER) RETURNS INTEGER AS $$
+CREATE OR REPLACE FUNCTION verificar_login_cliente(user_id_ INTEGER) RETURNS INTEGER AS $$
 BEGIN
   -- Consultar en la tabla Cliente si el usuario encontrado en la tabla Usuario tiene un trabajador asociado
-  SELECT cliente_id FROM Cliente WHERE user_id = user_id;
+  SELECT cliente_id FROM Cliente WHERE user_id = user_id_;
   IF FOUND THEN
     RETURN cliente_id;
   ELSE

@@ -1,0 +1,27 @@
+/** @format */
+
+import React from 'react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Heading,
+  Text,
+} from '@chakra-ui/react';
+
+function CustomCardNotificacionT (props) {
+  return (
+    <Card style={{ width: '200px' }}>
+      <CardHeader>
+        <Heading size='md'>Fecha: {props.fecha}</Heading>
+      </CardHeader>
+      <CardBody>
+        <Text>Asunto: {props.asunto}</Text>
+        <Text>Mensaje: {props.mensaje}</Text>
+      </CardBody>
+    </Card>
+  );
+}
+
+export default CustomCardNotificacionT ;

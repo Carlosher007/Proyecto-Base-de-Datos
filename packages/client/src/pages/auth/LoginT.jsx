@@ -7,6 +7,7 @@ import TextField from '../../components/TextField';
 import { formSchemaLoginT } from '../../common/index';
 import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
+import React, { useState } from 'react';
 
 const LoginT = () => {
   const { setUser } = useContext(AccountContext);
@@ -14,12 +15,13 @@ const LoginT = () => {
   const navigate = useNavigate();
   return (
     <Formik
-      initialValues={{ celular: '', contrasena: '' }}
+      initialValues={{ celular: '', contrasena: '' , tipo:''}}
       validationSchema={formSchemaLoginT}
       onSubmit={(values, actions) => {
-        // alert(JSON.stringify(values, null, 2));
-        // actions.resetForm();
         const vals = { ...values };
+        console.log(vals.tipo)
+        alert(JSON.stringify(values, null, 2));
+        // actions.resetForm();
         //  console.log(JSON.stringify(vals));
         actions.resetForm();
         fetch('http://localhost:8000/auth/loginT', {
@@ -68,8 +70,6 @@ const LoginT = () => {
           autoComplete='off'
           label='Contraseña'
         />
-
-        
 
         <ButtonGroup pt='1rem'>
           <Button colorScheme='teal' type='submit'>

@@ -20,13 +20,15 @@ function Navbar({ condition }) {
       {isHomePage || currentPath === '/' ? (
         <>
           <h3>Titulo</h3>
+          <ToggleColorMode />
           <button onClick={() => (window.location.href = '/')}>
             Ir a inicio
           </button>
         </>
       ) : (
         <>
-          <h3>LOGO</h3>
+          <h3>LOGO</h3> 
+          <ToggleColorMode />
           <nav ref={navRef}>
             {/* <a href='/#'>Home</a> */}
             {/* <a href='/#'>My work</a> */}

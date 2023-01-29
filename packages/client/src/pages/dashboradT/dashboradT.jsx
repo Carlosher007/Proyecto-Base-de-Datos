@@ -3,26 +3,54 @@
 import React from 'react';
 import CardList from '../../components/CardList';
 
-const data = [
+const misServicios = [
   {
-    header: 'Customer dashboard',
-    body: 'View a summary of all your customers over the last month.',
-    footer: 'View here',
+    fecha: '01/01/2022',
+    cliente: 'John Doe',
+    labor: 'Corte de césped',
+    calificacion: '5 estrellas',
+    pagado: true,
   },
   {
-    header: 'Customer dashboard',
-    body: 'View a summary of all your customers over the last month.',
-    footer: 'View here',
+    fecha: '02/01/2022',
+    cliente: 'Jane Smith',
+    labor: 'Limpieza de piscina',
+    calificacion: '4 estrellas',
+    pagado: true,
   },
   {
-    header: 'Customer dashboard',
-    body: 'View a summary of all your customers over the last month.',
-    footer: 'View here',
+    fecha: '03/01/2022',
+    cliente: 'Bob Johnson',
+    labor: 'Jardinería',
+    calificacion: '3 estrellas',
+    pagado: false,
+  },
+  {
+    fecha: '01/01/2022',
+    cliente: 'John Doe',
+    labor: 'Corte de césped',
+    calificacion: '5 estrellas',
+    pagado: true,
+  },
+  {
+    fecha: '02/01/2022',
+    cliente: 'Jane Smith',
+    labor: 'Limpieza de piscina',
+    calificacion: '4 estrellas',
+    pagado: true,
+  },
+  {
+    fecha: '03/01/2022',
+    cliente: 'Bob Johnson',
+    labor: 'Jardinería',
+    calificacion: '3 estrellas',
+    pagado: false,
   },
 ];
 
+
 const DashboardT = () => {
-  return <CardList data={data} />;
+  return <CardList data={misServicios} renderType='misServiciosT' />;
 };
 
 export default DashboardT;

@@ -11,6 +11,7 @@ import UserContext from './components/AccountContex.jsx';
 import Navbar from './components/Navbar.jsx';
 import container2 from './styles/container2.css';
 import containernavbar from './styles/containernavbar.css';
+import './index.css';
 
 function App() {
   return (

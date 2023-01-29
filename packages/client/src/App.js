@@ -18,7 +18,7 @@ function App() {
     <BrowserRouter>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <UserContext>
+        {/* <UserContext> */}
           <div className="navbar-container">
             <Navbar />
           </div>
@@ -26,10 +26,11 @@ function App() {
             <Views />
           </div>
           {/* <ToggleColorMode /> */}
-        </UserContext>
+        {/* </UserContext> */}
       </ChakraProvider>
     </BrowserRouter>
   );
 }
 
 export default App;
+

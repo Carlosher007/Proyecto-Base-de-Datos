@@ -14,7 +14,7 @@ import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
 
 const RegistroT = () => {
-  const { setUser } = useContext(AccountContext);
+  // const { setUser } = useContext(AccountContext);
 
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -85,7 +85,7 @@ const RegistroT = () => {
           })
           .then((data) => {
             if (!data) return;
-            setUser({ ...data });
+            // setUser({ ...data });
             navigate('/dashboardT');
           });
       } catch (err) {

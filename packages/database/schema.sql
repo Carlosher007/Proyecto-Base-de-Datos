@@ -6,12 +6,11 @@ CREATE TABLE Coordenada (
   direccion VARCHAR(255) NOT NULL UNIQUE
 );
 
-INSERT INTO Coordenada(latitud,longitud, direccion) VALUES (123,1245, 'Carrera 32 #76-32');
-
 CREATE TYPE medio_pago_tipo AS ENUM ('Debito', 'Credito');
 
 CREATE TABLE Medio_Pago (
-  numero_cuenta SERIAL PRIMARY KEY,
+  medio_pago_id SERIAL PRIMARY KEY,
+  numero_cuenta VARCHAR(255),
   tipo medio_pago_tipo NOT NULL
 );
 
@@ -28,7 +27,7 @@ CREATE TABLE Usuario (
 CREATE TABLE Cliente (
     cliente_id SERIAL PRIMARY KEY,
     recibo VARCHAR(255) NOT NULL,
-    numero_cuenta INTEGER REFERENCES Medio_Pago(numero_cuenta) UNIQUE NOT NULL,
+    numero_cuenta INTEGER REFERENCES Medio_Pago(medio_pago_id) UNIQUE NOT NULL,
     user_id INTEGER REFERENCES Usuario(user_id) UNIQUE NOT NULL
 );
 
@@ -92,29 +91,30 @@ CREATE TABLE Contrato (
 
 /*ADICIONALES*/
 --Añadir un trabajador
-CREATE OR REPLACE FUNCTION crear_trabajador(
-    nombre VARCHAR(255),
-    apellido VARCHAR(255),
-    email VARCHAR(255),
-    contrasena VARCHAR(255),
-    latitud FLOAT,
-    longitud FLOAT,
-    direccion VARCHAR(255),
-    foto_perfil VARCHAR(255),
-    doc_foto VARCHAR(255),
-    cuenta VARCHAR(255),
-    celular VARCHAR(255)
-) RETURNS INTEGER AS $$
+
+CREATE OR REPLACE PROCEDURE crear_trabajador(
+nombre VARCHAR(255),
+apellido VARCHAR(255),
+email VARCHAR(255),
+contrasena VARCHAR(255),
+latitud FLOAT,
+longitud FLOAT,
+direccion VARCHAR(255),
+foto_perfil VARCHAR(255),
+doc_foto VARCHAR(255),
+cuenta VARCHAR(255),
+celular VARCHAR(255)
+) AS $$
 BEGIN
-    -- Crear una nueva fila en la tabla Coordenada
-    INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion) RETURNING coor_id;
-    -- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
-    INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, coor_id) RETURNING user_id;
-    -- Crear una nueva fila en la tabla Trabajador con la relación al usuario recién creado
-    INSERT INTO Trabajador (foto_perfil, doc_foto, cuenta, user_id,disponible,calificacion) VALUES (foto_perfil, doc_foto, cuenta, user_id,true,null);
-    RETURN user_id;
+-- Crear una nueva fila en la tabla Coordenada
+INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion);
+-- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
+INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
+-- Crear una nueva fila en la tabla Trabajador con la relación al usuario recién creado
+INSERT INTO Trabajador (foto_perfil, disponible, calificacion, doc_foto, cuenta, user_id) VALUES (foto_perfil, TRUE, null,doc_foto, cuenta, (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
 END;
 $$ LANGUAGE plpgsql;
+
 
 --Añadir un cliente
 CREATE OR REPLACE FUNCTION crear_cliente(
@@ -143,15 +143,18 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
 --Verificar que un email este en uso, devuelve true si esta en uso
-CREATE OR REPLACE FUNCTION verificar_email(email VARCHAR(255)) RETURNS BOOLEAN AS $$
-DECLARE email_en_uso BOOLEAN;
+CREATE OR REPLACE FUNCTION verificar_email(email_ VARCHAR(255)) RETURNS TABLE(id INTEGER) AS $$
 BEGIN
-    SELECT EXISTS (SELECT email FROM Usuario WHERE email = email) INTO email_en_uso;
-    RETURN email_en_uso;
+SELECT id FROM Usuario WHERE email = email_ INTO id;
+  IF FOUND THEN
+      RETURN QUERY SELECT id;
+  ELSE
+      RETURN QUERY SELECT NULL::INTEGER as id;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 --Verificar loguin de trabajador
 CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id INTEGER) RETURNS INTEGER AS $$
@@ -180,28 +183,35 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
 --Verificar que una cuenta de trabajador este en uso
 CREATE OR REPLACE FUNCTION verificar_cuenta_trabajador(numero_cuenta VARCHAR(255))
-RETURNS BOOLEAN AS $$
+RETURNS TABLE (id INTEGER) AS $$
 BEGIN
-    RETURN (SELECT EXISTS(SELECT 1 FROM Trabajador WHERE cuenta = numero_cuenta));
+    IF EXISTS (SELECT 1 FROM Trabajador WHERE cuenta = numero_cuenta) THEN
+        RETURN QUERY SELECT trabajador_id FROM Trabajador WHERE cuenta = numero_cuenta;
+    ELSE
+        RETURN QUERY SELECT NULL::INTEGER as id;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
+
+
+
 --Verificar que un celular este en uso
-CREATE OR REPLACE FUNCTION verificar_celular(celular VARCHAR(255)) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION verificar_celular(celular_ VARCHAR(255)) RETURNS TABLE (id INTEGER) AS $$
 BEGIN
   -- Consultar en la tabla Usuario si existe un usuario con el número de celular dado
-  SELECT COUNT(*) FROM Usuario WHERE celular = celular;
+  SELECT id FROM Usuario WHERE celular = celular_ INTO id;
   -- Si existe al menos una fila con el número de celular dado, retornar true, en otro caso, false
-  IF count > 0 THEN
-      RETURN true;
+  IF FOUND THEN
+      RETURN QUERY SELECT id;
   ELSE
-      RETURN false;
+      RETURN QUERY SELECT NULL::INTEGER as id;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- Insertar un labor de un trabajador

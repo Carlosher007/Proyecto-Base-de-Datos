@@ -10,7 +10,7 @@ import { useContext } from 'react';
 import React, { useState } from 'react';
 
 const LoginT = () => {
-  const { setUser } = useContext(AccountContext);
+  // const { setUser } = useContext(AccountContext);
 
   const navigate = useNavigate();
   return (
@@ -43,7 +43,7 @@ const LoginT = () => {
           })
           .then((data) => {
             if (!data) return;
-            setUser({ ...data });
+            // setUser({ ...data });
             navigate('/dashboardT');
           });
       }}

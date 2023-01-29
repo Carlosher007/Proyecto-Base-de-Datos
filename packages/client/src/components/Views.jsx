@@ -19,7 +19,6 @@ import BuscarServiciosC from '../pages/dashboradC/BuscarServiciosC';
 import HistorialPagosC from '../pages/dashboradC/HistorialPagosC';
 import NotificacionesC from '../pages/dashboradC/NotificacionesC';
 
-
 const Views = () => {
   return (
     <Routes>
@@ -29,16 +28,15 @@ const Views = () => {
       <Route path='/loginT' element={<LoginT />} />
       <Route path='/registroT' element={<RegistroT />} />
       {/* <Route element={<PrivateRoutes />}> */}
-      <Route path='/dashboardT' element={<DashboardT />} /> {/* </Route> */}
+      <Route path='/dashboardT' element={<DashboardT />} />
+      {/* </Route> */}
       <Route path='/dashboardC' element={<DashboardC />} />
       <Route path='/error' element={<PaginaNoEncontrada />} />
       <Route path='/usuarioInvalido' element={<UsuarioInvalido />} />
-      <Route path='/elegirLabor' element={<ElegirLabor />} />
-      <Route path='/notificacionT' element={<NotificacionT />} />
-      <Route path='/historialPagosT' element={<HistorialPagosT />} />
       <Route path='/buscarServicioC' element={<BuscarServiciosC />} />
       <Route path='/historialPagosC' element={<HistorialPagosC />} />
       <Route path='/notificacionC' element={<NotificacionesC />} />
+      <Route path='/*' element={<PaginaNoEncontrada />} />
     </Routes>
   );
 };

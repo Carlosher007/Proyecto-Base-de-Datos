@@ -31,4 +31,13 @@ const formSchemaLoginT = Yup.object({
   contrasena: Yup.string().required('Contraseña requerida!'),
 });
 
-module.exports = { formSchemaRegistroT, formSchemaLoginT };
+const formSchemaElegirLabor = Yup.object({
+  labor: Yup.string().required('Seleccione una labor'),
+  medioDePago: Yup.string().required('Seleccione un medio de pago'),
+  precio: Yup.number()
+    .required('Precio requerido')
+    .typeError('Precio debe ser un número')
+});
+
+
+module.exports = { formSchemaRegistroT, formSchemaLoginT, formSchemaElegirLabor };

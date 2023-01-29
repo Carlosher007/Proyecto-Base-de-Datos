@@ -69,6 +69,8 @@ const LoginT = () => {
           label='Contraseña'
         />
 
+        
+
         <ButtonGroup pt='1rem'>
           <Button colorScheme='teal' type='submit'>
             Log In

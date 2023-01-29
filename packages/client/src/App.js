@@ -18,10 +18,10 @@ function App() {
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <UserContext>
-          <div class="navbar-container">
+          <div className="navbar-container">
             <Navbar />
           </div>
-          <div class='container2'>
+          <div className='container2'>
             <Views />
           </div>
           {/* <ToggleColorMode /> */}

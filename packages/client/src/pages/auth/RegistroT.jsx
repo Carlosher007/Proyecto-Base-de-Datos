@@ -87,6 +87,7 @@ const RegistroT = () => {
           })
           .then((data) => {
             if (!data) return;
+            setUser({ ...data });
             if (data.status) {
               setError(data.status);
               toast.warning(data.status);

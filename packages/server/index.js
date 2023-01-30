@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
   res.json('hi');
 });
 
-io.on('connect', (socket) => {});
+// io.on('connect', (socket) => {});
 
 server.listen(8000, () => {
   console.log('listening on port :8000');

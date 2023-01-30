@@ -64,12 +64,22 @@ const useAuth = () => {
   return user && user.loggedIn;
 };
 
-const PrivateRoutes = () => {
+const PublicRoutes = () => {
   const { user } = useContext(AccountContext);
   const isAuth = useAuth();
   const location = useLocation();
 
-  return isAuth ? <Outlet /> : <Navigate to='/' />;
+  console.log('user p', user);
+  console.log('user tipo p', user.tipo);
+  if (isAuth && user.tipo === 'trabajador') {
+    console.log('trabjador');
+    return <Navigate to='/dashboardT' />;
+  } else if (isAuth && user.tipo === 'cliente') {
+    console.log('trabjador');
+    return <Navigate to='/dashboardC' />;
+  } else {
+    return <Outlet />;
+  }
 };
 
-export default PrivateRoutes;
+export default PublicRoutes;

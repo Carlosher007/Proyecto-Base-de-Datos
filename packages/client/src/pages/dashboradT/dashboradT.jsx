@@ -2,6 +2,8 @@
 
 import React from 'react';
 import CardList from '../../components/CardList';
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
 
 const misServicios = [
   {
@@ -50,6 +52,8 @@ const misServicios = [
 
 
 const DashboardT = () => {
+  const { user, setUser } = useContext(AccountContext);
+console.log(user)
   return <CardList data={misServicios} renderType='misServiciosT' />;
 };
 

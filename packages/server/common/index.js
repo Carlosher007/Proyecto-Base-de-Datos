@@ -5,11 +5,11 @@ const Yup = require('yup');
 const formSchemaRegistroT = Yup.object({
   nombre: Yup.string()
     .required('Nombre requerido!')
-    .min(6, 'Nombre demasiado corto!')
+    .min(3, 'Nombre demasiado corto!')
     .max(28, 'Nombre demasiado largo!'),
   apellido: Yup.string()
     .required('Apellido requerido!')
-    .min(6, 'Apellido demasiado corto!')
+    .min(3, 'Apellido demasiado corto!')
     .max(28, 'Apellido demasiado largo!'),
   email: Yup.string().email('Email inválido').required('Email requerido!'),
   contrasena: Yup.string()

@@ -21,9 +21,15 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 const {
   handleLoginT,
+  handleLogin,
   attemptLoginT,
   attempRegisterT,
 } = require('../controllers/authController');
+
+router
+  .route('/login')
+  .get(handleLogin)
+
 
 router
   .route('/loginT')

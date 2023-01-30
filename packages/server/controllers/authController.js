@@ -2,6 +2,22 @@
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 
+module.exports.handleLogin = (req, res) => {
+  if (req.session.user && req.session.user.nombre) {
+    res.json({
+      loggedIn: true,
+      id: req.session.user.id,
+      nombre: req.session.user.nombre,
+      apellido: req.session.user.apellido,
+      foto_perfil: req.session.user.foto_perfil,
+      tipo: req.session.user.tipo,
+    });
+  } else {
+    res.json({ loggedIn: false });
+  }
+}
+
+
 module.exports.handleLoginT = (req, res) => {
   if (req.session.user && req.session.user.nombre) {
     res.json({

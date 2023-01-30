@@ -124,6 +124,9 @@ module.exports.attempRegisterT = async (req, res) => {
         const hashedPass = await bcrypt.hash(req.body.contrasena, 10);
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
+        //concatenamos el numero de cuenta al final de foto perfil
+        req.body.foto_perfil = req.body.foto_perfil + req.body.numero_cuenta;
+        req.body.doc_foto = req.body.foto_perfil + req.body.numero_cuenta;
 
         await pool.query(
           'CALL crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',

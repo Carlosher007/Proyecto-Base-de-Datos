@@ -2,12 +2,15 @@
 
 import { useRef } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useContext } from 'react';
+import { AccountContext } from '../components/AccountContex';
 import '../styles/navbar.css';
 import ToggleColorMode from './ToggleColorMode.jsx';
 const currentPath = window.location.pathname;
-const isHomePage = /^\/(loginT|registroT)$/.test(currentPath);
+const isHomePage = /^\/(loginT|registroT|loginC|registroC)$/.test(currentPath);
 
 function Navbar({ condition }) {
+  const {user, setUser } = useContext(AccountContext);
   const navRef = useRef();
 
   const showNavbar = () => {

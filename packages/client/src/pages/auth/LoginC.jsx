@@ -19,23 +19,18 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const LoginC = () => {
-  const [selectedType, setSelectedType] = useState('');
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const { setUser } = useContext(AccountContext);
 
   return (
     <Formik
-      initialValues={{ celular: '', contrasena: '', tipo: '' }}
+      initialValues={{ celular: '', contrasena: '' }}
       validationSchema={formSchemaLoginT}
       onSubmit={(values, actions) => {
         const vals = { ...values };
-        if (selectedType === '') {
-          toast.error('Debe seleccionar un tipo de cuenta');
-          return;
-        }
-        vals.tipo = selectedType;
-        alert(JSON.stringify(vals, null, 2));
-        fetch('http://localhost:8000/auth/loginT', {
+        actions.resetForm();
+        fetch('http://localhost:8000/auth/loginC', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -55,7 +50,12 @@ const LoginC = () => {
           .then((data) => {
             if (!data) return;
             setUser({ ...data });
-            navigate('/dashboardT');
+            if (data.status) {
+              setError(data.status);
+              toast.warning(data.status);
+            } else if (data.loggedIn) {
+              navigate('/dashboardC');
+            }
           });
       }}
     >
@@ -80,21 +80,6 @@ const LoginC = () => {
           autoComplete='off'
           label='Contraseña'
         />
-
-        <RadioGroup
-          onChange={(value) => setSelectedType(value)}
-        >
-          <Stack spacing={5} direction='row'>
-            <Radio colorScheme='red' value='1'>
-              Credito
-            </Radio>
-
-            <Radio colorScheme='green' value='2'>
-              Debito
-            </Radio>
-          </Stack>
-        </RadioGroup>
-
         <ButtonGroup pt='1rem'>
           <Button colorScheme='teal' type='submit'>
             Log In

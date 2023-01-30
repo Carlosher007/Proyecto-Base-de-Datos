@@ -99,15 +99,19 @@ email VARCHAR(255),
 contrasena VARCHAR(255),
 latitud FLOAT,
 longitud FLOAT,
-direccion VARCHAR(255),
+direccion_ VARCHAR(255),
 foto_perfil VARCHAR(255),
 doc_foto VARCHAR(255),
 cuenta VARCHAR(255),
 celular VARCHAR(255)
+id_coordenada INTEGER
 ) AS $$
 BEGIN
+--Verificar direccion en coordenada
+SELECT coor_id INTO id_coordenada FROM Coordenada WHERE direccion = direccion;
+
 -- Crear una nueva fila en la tabla Coordenada
-INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion);
+INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion_);
 -- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
 INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
 -- Crear una nueva fila en la tabla Trabajador con la relación al usuario recién creado

@@ -41,7 +41,7 @@ const formSchemaRegistroC = Yup.object({
     .min(6, 'Contraseña demasiado corta!')
     .max(28, 'Contraseña demasiado larga!'),
   recibo: Yup.string().required('Foto de recibo requerida'),
-  numero_medio: Yup.string().required('Numero del medio de pago requerido'),
+  numero_cuenta: Yup.string().required('Numero del medio de pago requerido'),
   direccion: Yup.string().required('Direccion requerida!'),
   celular: Yup.string().required('Celular requerido!'),
 });

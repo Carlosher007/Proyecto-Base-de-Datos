@@ -84,7 +84,7 @@ const LoginC = () => {
           <Button colorScheme='teal' type='submit'>
             Log In
           </Button>
-          <Button onClick={() => navigate('/registroT')}>Create Account</Button>
+          <Button onClick={() => navigate('/registroC')}>Create Account</Button>
         </ButtonGroup>
       </VStack>
     </Formik>

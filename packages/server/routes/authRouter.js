@@ -3,6 +3,7 @@
 const express = require('express');
 const validateFormRegisterT = require('../controllers/validateForm');
 const validateFormLoginT = require('../controllers/validateForm');
+const validateFormRegisterC = require('../controllers/validateForm');
 const router = express.Router();
 const multer = require('multer');
 
@@ -20,10 +21,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const {
-  handleLoginT,
   handleLogin,
+  handleLoginT,
+  handleLoginC,
   attemptLoginT,
+  attemptLoginC,
   attempRegisterT,
+  attempRegisterC,
 } = require('../controllers/authController');
 
 router
@@ -36,6 +40,14 @@ router
   .get(handleLoginT)
   .post(validateFormLoginT, attemptLoginT);
 
+router
+  .route('/loginC')
+  .get(handleLoginC)
+  .post(validateFormLoginT, attemptLoginC);
+
+
 router.post('/registroT', validateFormRegisterT, attempRegisterT)
+
+router.post('/registroC', validateFormRegisterC, attempRegisterC);
 
 module.exports = router;

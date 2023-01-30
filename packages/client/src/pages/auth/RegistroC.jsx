@@ -1,7 +1,16 @@
 /** @format */
 
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Button, ButtonGroup, Heading, VStack, Text } from '@chakra-ui/react';
+import {
+  Button,
+  ButtonGroup,
+  Heading,
+  VStack,
+  Text,
+  Radio,
+  RadioGroup,
+  Stack,
+} from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
@@ -9,13 +18,14 @@ import FileUpload from '../../components/FileUpload';
 import axios from 'axios';
 import React, { useState } from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { formSchemaRegistroT } from '../../common/index';
+import { formSchemaRegistroC } from '../../common/index';
 import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
 import { toast } from 'react-toastify';
 
 const RegistroC = () => {
   const { setUser } = useContext(AccountContext);
+  const [selectedType, setSelectedType] = useState('');
 
   const [error, setError] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
@@ -65,10 +75,18 @@ const RegistroC = () => {
         values.latitud = response.lat;
         values.longitud = response.lng;
         //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
-        // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
         // actions.resetForm();
-        fetch('http://localhost:8000/auth/registroT', {
+        if (selectedType === '' || selectedType === undefined || selectedType === null) {
+          toast.error('Debe seleccionar un tipo de cuenta');
+          return;
+        }
+        if (selectedType === 1 || selectedType === '1'  ) {
+          vals.tipo = 'Credito';
+        } else {
+          vals.tipo = 'Debito';
+        }
+        fetch('http://localhost:8000/auth/registroC', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -92,7 +110,7 @@ const RegistroC = () => {
               setError(data.status);
               toast.warning(data.status);
             } else if (data.loogedIn) {
-              navigate('/dashboardT');
+              navigate('/dashboardC');
             }
           });
       } catch (err) {
@@ -114,13 +132,13 @@ const RegistroC = () => {
         contrasena: '',
         recibo: '',
         tipo: '',
-        numero_medio: '',
+        numero_cuenta: '',
         direccion: '',
         longitud: '',
         latitud: '',
         celular: '',
       }}
-      validationSchema={formSchemaRegistroT}
+      validationSchema={formSchemaRegistroC}
       onSubmit={handleSubmit}
     >
       <VStack
@@ -160,8 +178,20 @@ const RegistroC = () => {
           label='Contrasena'
         />
         <FileUpload name='recibo' label='Foto del recibo' />
+        <RadioGroup onChange={(value) => setSelectedType(value)}>
+          <Stack spacing={5} direction='row'>
+            <Radio colorScheme='red' value='1'>
+              Credito
+            </Radio>
+
+            <Radio colorScheme='green' value='2'>
+              Debito
+            </Radio>
+          </Stack>
+        </RadioGroup>
+        ;
         <TextField
-          name='numero_medio'
+          name='numero_cuenta'
           placeholder='Digite el numero del medio de pago'
           autoComplete='off'
           label='Numero del medio de pago'
@@ -190,7 +220,7 @@ const RegistroC = () => {
             Create Account
           </Button>
           <Button
-            onClick={() => navigate('/loginT')}
+            onClick={() => navigate('/loginC')}
             leftIcon={<ArrowBackIcon />}
           >
             Back

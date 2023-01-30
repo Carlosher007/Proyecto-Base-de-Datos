@@ -135,8 +135,9 @@ CREATE OR REPLACE PROCEDURE crear_cliente(
   recibo VARCHAR(255),
   celular VARCHAR(255),
   num_cuenta VARCHAR(255),
-  tipo_cuenta medio_pago_tipo
+  tipo_cuenta VARCHAR(255)
 ) AS $$  
+DECLARE cid INTEGER;
 BEGIN
   --Verificar si la coordenada ya existe
   SELECT coor_id FROM Coordenada WHERE direccion = direccion_ INTO cid;
@@ -154,7 +155,7 @@ BEGIN
     INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, cid);
     INSERT INTO Medio_Pago (numero_cuenta,tipo) VALUES (num_cuenta,tipo_cuenta::medio_pago_tipo);
     INSERT INTO Cliente (recibo, numero_cuenta, user_id) VALUES (recibo, (SELECT num_cuenta FROM Medio_Pago ORDER BY medio_pago_id DESC LIMIT 1), (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
-  ENDIF;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -211,7 +212,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Verificar numero_cuenta Cliente
+CREATE OR REPLACE FUNCTION verificar_cuenta_cliente(cuenta VARCHAR(255))
+RETURNS TABLE (id INTEGER) AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM Cliente WHERE numero_cuenta = cuenta) THEN
+        RETURN QUERY SELECT cliente_id FROM Cliente WHERE numero_cuenta = cuenta;
+    ELSE
+        RETURN QUERY SELECT NULL::INTEGER as id;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
 
 
 --Verificar que un celular este en uso

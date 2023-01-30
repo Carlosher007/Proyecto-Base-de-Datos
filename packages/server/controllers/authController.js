@@ -29,7 +29,6 @@ module.exports.attemptLoginT = async (req, res) => {
       potentialLogin.rows[0].contrasena
     );
 
-    console.log('a', isSamePass);
     if (isSamePass) {
       //verificamos que ese login pertenezca a un trabajador
       const consultatrabajadorId = await pool.query(

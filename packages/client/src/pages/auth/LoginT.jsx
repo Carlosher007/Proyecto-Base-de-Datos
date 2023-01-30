@@ -43,10 +43,8 @@ const LoginT = () => {
             return res.json();
           })
           .then((data) => {
-            console.log(data);
             if (!data) return;
             setUser({ ...data });
-            console.log(user);
             if (data.status) {
               setError(data.status);
               toast.warning(data.status);

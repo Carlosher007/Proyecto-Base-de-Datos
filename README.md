@@ -7,7 +7,7 @@
 - Abres la consola y escribes : psql -U postgres
 - Creas la database mande2: CREATE DATABASE mande2
 - Te conectas así \c mande2
-- vas a server y le das yarn dev (si te pide el de bycript das yarn add bycript)
+- vas a server y le das yarn dev (si te pide el de bcrypt das yarn add bcrypt)
 - vas a client y das yarn dev
 - LISTO PA
 

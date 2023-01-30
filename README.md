@@ -10,3 +10,5 @@
 - vas a server y le das yarn dev (si te pide el de bycript das yarn add bycript)
 - vas a client y das yarn dev
 - LISTO PA
+
+-PUEDE QUE TENGAMOS QUE INSTALAR REDIS

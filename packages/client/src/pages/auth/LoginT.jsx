@@ -1,6 +1,6 @@
 /** @format */
 
-import { Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
+import { Button, ButtonGroup, Heading, VStack, Text } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
@@ -8,22 +8,22 @@ import { formSchemaLoginT } from '../../common/index';
 import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
 import React, { useState } from 'react';
+import { calcLength } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const LoginT = () => {
-  // const { setUser } = useContext(AccountContext);
+  const { user, setUser } = useContext(AccountContext);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   return (
     <Formik
-      initialValues={{ celular: '', contrasena: '' , tipo:''}}
+      initialValues={{ celular: '', contrasena: '' }}
       validationSchema={formSchemaLoginT}
       onSubmit={(values, actions) => {
         const vals = { ...values };
-        console.log(vals.tipo)
-        alert(JSON.stringify(values, null, 2));
-        // actions.resetForm();
-        //  console.log(JSON.stringify(vals));
         actions.resetForm();
+        //  console.log(JSON.stringify(vals));
         fetch('http://localhost:8000/auth/loginT', {
           method: 'POST',
           credentials: 'include',
@@ -36,15 +36,22 @@ const LoginT = () => {
             return;
           })
           .then((res) => {
+            // console.log(res);
             if (!res || !res.ok || res.status >= 400) {
               return;
             }
             return res.json();
           })
           .then((data) => {
+            console.log(data)
             if (!data) return;
-            // setUser({ ...data });
-            navigate('/dashboardT');
+            setUser({ ...data });
+            if (data.status) {
+              setError(data.status);
+              toast.warning(data.status);
+            } else if (data.loggedIn) {
+              navigate('/dashboardT');
+            }
           });
       }}
     >
@@ -57,6 +64,9 @@ const LoginT = () => {
         spacing='1rem'
       >
         <Heading>Log In</Heading>
+        <Text as='p' color='red.500'>
+          {error}
+        </Text>
         <TextField
           name='celular'
           placeholder='Digite el celular'

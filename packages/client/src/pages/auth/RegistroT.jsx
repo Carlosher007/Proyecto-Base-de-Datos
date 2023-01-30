@@ -1,7 +1,7 @@
 /** @format */
 
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Button, ButtonGroup, Heading, VStack } from '@chakra-ui/react';
+import { Button, ButtonGroup, Heading, VStack, Text } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import TextField from '../../components/TextField';
@@ -12,10 +12,12 @@ import Alert from '@material-ui/lab/Alert';
 import { formSchemaRegistroT } from '../../common/index';
 import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
 
 const RegistroT = () => {
-  // const { setUser } = useContext(AccountContext);
+  const { setUser } = useContext(AccountContext);
 
+  const [error, setError] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -85,8 +87,12 @@ const RegistroT = () => {
           })
           .then((data) => {
             if (!data) return;
-            // setUser({ ...data });
-            navigate('/dashboardT');
+            if (data.status) {
+              setError(data.status);
+              toast.warning(data.status);
+            } else if (data.loogedIn) {
+              navigate('/dashboardT');
+            }
           });
       } catch (err) {
         actions.setFieldError(
@@ -124,6 +130,9 @@ const RegistroT = () => {
         spacing='1rem'
       >
         <Heading>Sign Up</Heading>
+        <Text as='p' color='red.500'>
+          {error}
+        </Text>
         <TextField
           name='nombre'
           placeholder='Digite el nombre'

@@ -91,7 +91,7 @@ const UserContext = ({ children }) => {
           return;
         }
         setUser({ ...data });
-        navigate('/dashboardT');
+        // navigate('/dashboardT');
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

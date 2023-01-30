@@ -3,7 +3,7 @@ CREATE TABLE Coordenada (
   coor_id SERIAL PRIMARY KEY,
   latitud FLOAT NOT NULL,
   longitud FLOAT NOT NULL,
-  direccion VARCHAR(255) NOT NULL UNIQUE
+  direccion VARCHAR(255) NOT NULL
 );
 
 CREATE TYPE medio_pago_tipo AS ENUM ('Debito', 'Credito');
@@ -87,35 +87,38 @@ CREATE TABLE Contrato (
     transaccion_id INTEGER REFERENCES Transaccion(transanccion_id) 
 );
 
-
-
 /*ADICIONALES*/
 --Añadir un trabajador
 
 CREATE OR REPLACE PROCEDURE crear_trabajador(
-nombre VARCHAR(255),
-apellido VARCHAR(255),
-email VARCHAR(255),
-contrasena VARCHAR(255),
-latitud FLOAT,
-longitud FLOAT,
-direccion_ VARCHAR(255),
-foto_perfil VARCHAR(255),
-doc_foto VARCHAR(255),
-cuenta VARCHAR(255),
-celular VARCHAR(255)
-id_coordenada INTEGER
+  nombre VARCHAR(255),
+  apellido VARCHAR(255),
+  email VARCHAR(255),
+  contrasena VARCHAR(255),
+  latitud FLOAT,
+  longitud FLOAT,
+  direccion_ VARCHAR(255),
+  foto_perfil VARCHAR(255),
+  doc_foto VARCHAR(255),
+  cuenta VARCHAR(255),
+  celular VARCHAR(255)
 ) AS $$
+  DECLARE cid INTEGER;
 BEGIN
---Verificar direccion en coordenada
-SELECT coor_id INTO id_coordenada FROM Coordenada WHERE direccion = direccion;
+  --Verificar si la coordenada ya existe
+  SELECT coor_id FROM Coordenada WHERE direccion = direccion_ INTO cid;
 
--- Crear una nueva fila en la tabla Coordenada
-INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion_);
--- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
-INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
--- Crear una nueva fila en la tabla Trabajador con la relación al usuario recién creado
-INSERT INTO Trabajador (foto_perfil, disponible, calificacion, doc_foto, cuenta, user_id) VALUES (foto_perfil, TRUE, null,doc_foto, cuenta, (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  IF cid IS NULL THEN
+    -- Crear una nueva fila en la tabla Coordenada
+    INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion_);
+    -- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
+    INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
+    -- Crear una nueva fila en la tabla Trabajador con la relación al usuario recién creado
+    INSERT INTO Trabajador (foto_perfil, disponible, calificacion, doc_foto, cuenta, user_id) VALUES (foto_perfil, TRUE, null,doc_foto, cuenta, (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  ELSE
+    INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, cid);
+    INSERT INTO Trabajador (foto_perfil, disponible, calificacion, doc_foto, cuenta, user_id) VALUES (foto_perfil, TRUE, null,doc_foto, cuenta, (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -128,21 +131,30 @@ CREATE OR REPLACE PROCEDURE crear_cliente(
   contrasena VARCHAR(255),
   latitud FLOAT,
   longitud FLOAT,
-  direccion VARCHAR(255),
+  direccion_ VARCHAR(255),
   recibo VARCHAR(255),
   celular VARCHAR(255),
   num_cuenta VARCHAR(255),
   tipo_cuenta medio_pago_tipo
 ) AS $$  
 BEGIN
-  -- Crear una nueva fila en la tabla Coordenada
-  INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion);
-  -- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
-  INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
-  -- Crear una nueva fila en la tabla Medio_Pago
-  INSERT INTO Medio_Pago (numero_cuenta,tipo) VALUES (num_cuenta,tipo_cuenta::medio_pago_tipo);
-  -- Crear una nueva fila en la tabla Cliente con la relación al usuario recién creado y al medio de pago recién creado
-  INSERT INTO Cliente (recibo, numero_cuenta, user_id) VALUES (recibo, (SELECT num_cuenta FROM Medio_Pago ORDER BY medio_pago_id DESC LIMIT 1), (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  --Verificar si la coordenada ya existe
+  SELECT coor_id FROM Coordenada WHERE direccion = direccion_ INTO cid;
+
+  IF cid IS NULL THEN
+     -- Crear una nueva fila en la tabla Coordenada
+    INSERT INTO Coordenada (latitud, longitud, direccion) VALUES (latitud, longitud, direccion_);
+    -- Crear una nueva fila en la tabla Usuario con la relación a la coordenada recién creada
+    INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, (SELECT coor_id FROM Coordenada ORDER BY coor_id DESC LIMIT 1));
+    -- Crear una nueva fila en la tabla Medio_Pago
+    INSERT INTO Medio_Pago (numero_cuenta,tipo) VALUES (num_cuenta,tipo_cuenta::medio_pago_tipo);
+    -- Crear una nueva fila en la tabla Cliente con la relación al usuario recién creado y al medio de pago recién creado
+    INSERT INTO Cliente (recibo, numero_cuenta, user_id) VALUES (recibo, (SELECT num_cuenta FROM Medio_Pago ORDER BY medio_pago_id DESC LIMIT 1), (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  ELSE
+    INSERT INTO Usuario (nombre, apellido, email, contrasena, celular, coor_id) VALUES (nombre, apellido, email, contrasena, celular, cid);
+    INSERT INTO Medio_Pago (numero_cuenta,tipo) VALUES (num_cuenta,tipo_cuenta::medio_pago_tipo);
+    INSERT INTO Cliente (recibo, numero_cuenta, user_id) VALUES (recibo, (SELECT num_cuenta FROM Medio_Pago ORDER BY medio_pago_id DESC LIMIT 1), (SELECT user_id FROM Usuario ORDER BY user_id DESC LIMIT 1));
+  ENDIF;
 END;
 $$ LANGUAGE plpgsql;
 

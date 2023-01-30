@@ -1,15 +1,19 @@
 /** @format */
 
-const { Router } = require('express');
 const pool = require('../db');
-const { prueba, prueba2, newCoor } = require('../controllers/tasks.controller');
 
-const router = Router();
+const nuevoEjerce = async (req,res) => {
+  const {tid,labor_,tipo_trabajo,precio,descripcion} = req.body;
 
-router.get('/usuario', prueba);
+  try{
+    const result = await pool.query('CALL trabajador_ejerce($1,$2,$3,$4,$5)',[tid,labor_,tipo_trabajo,precio,descripcion]);
+    res.json(result)
+  } catch (error){
+    res.json({error: error})
+  }
+};
 
-router.get('/coordenada', prueba2);
+module.exports = {
+  nuevoEjerce
+};
 
-router.post('/coordenada', newCoor);
-
-module.exports = router;

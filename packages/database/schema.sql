@@ -269,6 +269,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE PROCEDURE trabajador_ejerce(tid INTEGER, labor_ VARCHAR(255), tipo_trabajo VARCHAR(255), precio FLOAT, descripcion VARCHAR(255)) AS $$
+    DECLARE lid INTEGER;
+    DECLARE result RECORD;
+  BEGIN
+    FOR result IN SELECT labor_id FROM Ejerce WHERE trabajador_id = tid
+    LOOP
+      SELECT labor_id FROM Labor NATURAL JOIN Ejerce WHERE labor_id = result.labor_id AND labor = labor_::labor_tipo INTO lid;
+      IF lid IS NOT NULL THEN
+        raise notice 'Ya tiene ese labor';
+        RETURN;
+      END IF;
+    END LOOP;
+    SELECT labor_id FROM Labor WHERE labor_::labor_tipo = labor INTO lid;
+    INSERT INTO Ejerce(trabajador_id,labor_id,tipo_trabajo,precio,descripcion) VALUES (tid,lid,tipo_trabajo::tipo_trabajo,precio,descripcion);
+  END;
+$$ LANGUAGE plpgsql;
+
 -- Actualiza automáticamente la disponibilidad del trabajador asociado a un contrato al momento de insertar una nueva fila en la tabla de contrato
 CREATE OR REPLACE FUNCTION actualizar_disponibilidad()
 RETURNS TRIGGER

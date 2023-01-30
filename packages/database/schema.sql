@@ -49,6 +49,18 @@ CREATE TABLE Labor (
     labor labor_tipo NOT NULL UNIQUE
 );
 
+INSERT INTO Labor(labor) VALUES 
+  ('Carpinteria'),
+  ('Electricidad'),
+  ('Plomeria'),
+  ('Pintura'),
+  ('Jardineria'),
+  ('Albañileria'),
+  ('Mecanica'),
+  ('Tecnologia'),
+  ('Cocina'),
+  ('Limpieza');
+
 CREATE TYPE asunto_tipo AS ENUM ('Contrato', 'Finalizacion');
 
 CREATE TABLE Notificacion (
@@ -75,6 +87,24 @@ CREATE TABLE Ejerce (
     precio FLOAT NOT NULL,
     descripcion VARCHAR(255)
 );
+
+
+CREATE OR REPLACE PROCEDURE trabajadorejerce(tid INTEGER, labor_ VARCHAR(255), tipo_trabajo VARCHAR(255), precio FLOAT, descripcion VARCHAR(255)) AS $$
+    DECLARE lid INTEGER;
+    DECLARE result RECORD;
+  BEGIN
+    FOR result IN SELECT labor_id FROM Ejerce WHERE trabajador_id = tid
+    LOOP
+      SELECT labor_id FROM Labor NATURAL JOIN Ejerce WHERE labor_id = result.labor_id AND labor = labor_::labor_tipo INTO lid;
+      IF lid IS NOT NULL THEN
+        raise notice 'Ya tiene ese labor';
+        RETURN;
+      END IF;
+    END LOOP;
+    SELECT labor_id FROM Labor WHERE labor_::labor_tipo = labor INTO lid;
+    INSERT INTO Ejerce(trabajador_id,labor_id,tipo_trabajo,precio,descripcion) VALUES (tid,lid,tipo_trabajo::tipo_trabajo,precio,descripcion);
+  END;
+$$ LANGUAGE plpgsql;
 
 CREATE TABLE Contrato (
     contrato_id SERIAL PRIMARY KEY,

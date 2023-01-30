@@ -4,23 +4,35 @@ import { useRef } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useContext } from 'react';
 import { AccountContext } from '../components/AccountContex';
+import { useNavigate } from 'react-router';
 import '../styles/navbar.css';
 import ToggleColorMode from './ToggleColorMode.jsx';
 const currentPath = window.location.pathname;
-const isHomePage = /^\/(loginT|registroT|loginC|registroC)$/.test(currentPath);
 
 function Navbar({ condition }) {
-  const {user, setUser } = useContext(AccountContext);
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(AccountContext);
   const navRef = useRef();
 
   const showNavbar = () => {
     navRef.current.classList.toggle('responsive_nav');
   };
 
+  const desloguearse = () => {
+    setUser({ loggedIn: false });
+    navigate('/');
+
+  };
+
   return (
     <header>
       {/* <ToggleColorMode /> */}
-      {isHomePage || currentPath === '/' ? (
+      {(currentPath === '/' ||
+      currentPath === '/loginC' ||
+      currentPath === '/loginT' ||
+      currentPath === '/registroT' ||
+      currentPath === '/registroC') ? (
         <>
           <h3>Titulo</h3>
           <ToggleColorMode />
@@ -30,7 +42,7 @@ function Navbar({ condition }) {
         </>
       ) : (
         <>
-          <h3>LOGO</h3> 
+          <h3>LOGO</h3>
           <ToggleColorMode />
           <nav ref={navRef}>
             {/* <a href='/#'>Home</a> */}
@@ -41,6 +53,9 @@ function Navbar({ condition }) {
               <FaTimes />
             </button>
           </nav>
+          <button className='nav-btn' onClick={desloguearse}>
+            Salir
+          </button>
           <button className='nav-btn' onClick={showNavbar}>
             <FaBars />
           </button>

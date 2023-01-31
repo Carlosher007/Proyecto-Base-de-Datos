@@ -173,3 +173,58 @@ BEGIN
   WHERE T.trabajador_id = p_trabajador_id;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Tabla con informacion de los contratos que tiene el trabajador 
+CREATE OR REPLACE FUNCTION infoContratoCliente(p_cliente_id INTEGER)
+RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_trabajador VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT contrato.contrato_id, contrato.ejerce_id, contrato.cliente_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
+  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_trabajador, (labor.labor )::varchar AS nombre_labor, transaccion.monto IS NOT NULL AS is_pagado
+  FROM Contrato contrato
+  JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
+  JOIN Cliente cliente ON contrato.cliente_id = cliente.cliente_id
+  JOIN Trabajador trabajador ON ejerce.trabajador_id = trabajador.trabajador_id
+  JOIN Labor labor ON ejerce.labor_id = labor.labor_id
+-- Join a transaccion para ver si esta pagado
+  JOIN Transaccion transaccion ON contrato.transaccion_id = transaccion.transaccion_id
+  JOIN Usuario usuario ON trabajador.user_id = usuario.user_id
+  WHERE cliente.cliente_id = p_cliente_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Tabla con informacion de las transacciones que tiene el cliente
+CREATE OR REPLACE FUNCTION infoTransaccionClientes(p_cliente_id INTEGER)
+  RETURNS TABLE (fecha_transaccion DATE, monto_transaccion FLOAT, cuenta_recibio VARCHAR(255), cuenta_envio  VARCHAR(255), labor_ VARCHAR(255)) AS $$
+  BEGIN
+    RETURN QUERY 
+    SELECT 
+      trans.fecha AS fecha_transaccion,
+      trans.monto AS monto_transaccion,
+      trabajador.cuenta AS cuenta_recibio,
+      cliente.numero_cuenta AS cuenta_envio,
+      labor.labor::varchar AS labor_
+    FROM Contrato contrato
+  JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
+  JOIN Cliente cliente ON contrato.cliente_id = cliente.cliente_id
+  JOIN Trabajador trabajador ON ejerce.trabajador_id = trabajador.trabajador_id
+  JOIN Labor labor ON ejerce.labor_id = labor.labor_id
+  JOIN Transaccion trans ON contrato.transaccion_id = trans.transaccion_id
+  WHERE contrato.cliente_id = p_cliente_id
+  AND trans.fecha IS NOT NULL;
+  END;
+$$ LANGUAGE plpgsql;
+
+--notificaciones del cliente
+CREATE OR REPLACE FUNCTION notificacionesC(p_cliente_id INTEGER)
+RETURNS TABLE (notificacion_id INTEGER, fecha DATE, mensaje VARCHAR(255), asunto VARCHAR(255)) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT notificacion.notificacion_id, notificacion.fecha, notificacion.mensaje, notificacion.asunto::varchar
+  -- tenemos en cuenta que la notificacion esta asociada a un usuario, es decir tiene user_id y no trabajador_id
+  FROM Notificacion notificacion
+  JOIN Usuario usuario ON notificacion.user_id = usuario.user_id
+  JOIN Cliente cliente ON usuario.user_id = cliente.user_id
+  WHERE cliente.cliente_id = p_cliente_id;
+END;
+$$ LANGUAGE plpgsql;

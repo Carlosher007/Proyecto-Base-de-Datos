@@ -247,6 +247,12 @@ module.exports.attempRegisterT = async (req, res) => {
   }
 };
 
+module.exports.attemptLogout = async (req,res) => {
+  res.clearCookie('sid');
+  // req.session.destroy();
+  res.json({loggedIn: false});
+}
+
 module.exports.attempRegisterC = async (req, res) => {
   //Verificamos los valores unicos
   const celularExiste = await pool.query(

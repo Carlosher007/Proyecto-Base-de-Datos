@@ -20,6 +20,8 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+
+
 const {
   handleLogin,
   handleLoginT,
@@ -28,6 +30,7 @@ const {
   attemptLoginC,
   attempRegisterT,
   attempRegisterC,
+  attemptLogout
 } = require('../controllers/authController');
 
 router
@@ -50,5 +53,6 @@ router.post('/registroT', validateFormRegisterT, attempRegisterT)
 
 router.post('/registroC', validateFormRegisterC, attempRegisterC);
 
+router.get('/logout', attemptLogout);
 
 module.exports = router;

@@ -93,7 +93,7 @@ const RegistroT = () => {
               setError(data.status);
               toast.warning(data.status);
             } else if (data.loogedIn) {
-              navigate('/dashboardT');
+              navigate('/elegirLaborT');
             }
           });
       } catch (err) {

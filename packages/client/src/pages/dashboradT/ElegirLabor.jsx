@@ -22,37 +22,90 @@ const ElegirLabor = () => {
   useEffect(() => {
     loadLabores(user.id);
   }, []);
-  
+
   const loadLabores = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8000/getLabores/${id}`);
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const data = await response.json();
-      setLabores(data.map((item) => item.labor));
-    } catch (error) {
-      console.error(error);
-    }
+    fetch(`http://localhost:8000/getLabores/${id}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .catch((err) => {
+        return;
+      })
+      .then((res) => {
+        // console.log(res);
+        if (!res || !res.ok || res.status >= 400) {
+          toast.warning('No hay labores disponibles, lo mejor es que vayas a dashboard')
+          return;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        setLabores(data.map((item) => item.labor));
+      });
   };
 
   const submitForm = async (e) => {
     e.preventDefault();
+    const price = parseFloat(formData.precio);
+    //pero como formData.labot es un string necesitamos parsearlo a int,. asi:
+    const indice = parseInt(formData.labor_);
+    const laborAsociado = labores[indice];
     if (isNaN(formData.precio)) {
       toast.error('El precio debe ser un número');
       return;
     } else {
+      console.log(formData);
 
-      const response = await fetch("http://localhost:8000/nuevoEjerce",{
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, tid: user.id }),
+      // const response = await fetch('http://localhost:8000/nuevoEjerce', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     ...formData,
+      //     tid: user.id,
+      //     labor_: laborAsociado,
+      //     precio: price,
+      //   }),
+      // });
+      // await response.json();
+      // console.log(response);
+
+      fetch('http://localhost:8000/nuevoEjerce', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          tid: user.id,
+          labor_: laborAsociado,
+          precio: price,
+        }),
       })
-      await response.json();
-      console.log(response)
-
-      toast.success('Puedes agregar otro labor si lo deseas');
-      setLabores(labores.filter((item) => item !== labores[formData.labor]));
+        .catch((err) => {
+          return;
+        })
+        .then((res) => {
+          // console.log(res);
+          if (!res || !res.ok || res.status >= 400) {
+            return;
+          }
+          toast.warning(
+            'Es posible que ya este asociado a ese labor, intente eligiendo otro'
+          );
+          return res.json();
+        })
+        .then((data) => {
+          if (!data) return;
+          toast.success('Puedes agregar otro labor si lo deseas');
+          setLabores(
+            labores.filter((item) => item !== labores[formData.labor])
+          );
+        });
     }
   };
 

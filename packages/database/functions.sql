@@ -176,10 +176,10 @@ $$ LANGUAGE plpgsql;
 
 -- Tabla con informacion de los contratos que tiene el trabajador 
 CREATE OR REPLACE FUNCTION infoContratoCliente(p_cliente_id INTEGER)
-RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_trabajador VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
+RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_trabajador VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
 BEGIN
   RETURN QUERY
-  SELECT contrato.contrato_id, contrato.ejerce_id, contrato.cliente_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
+  SELECT contrato.contrato_id, contrato.ejerce_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
   CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_trabajador, (labor.labor )::varchar AS nombre_labor, transaccion.monto IS NOT NULL AS is_pagado
   FROM Contrato contrato
   JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
@@ -194,7 +194,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Tabla con informacion de las transacciones que tiene el cliente
-CREATE OR REPLACE FUNCTION infoTransaccionClientes(p_cliente_id INTEGER)
+CREATE OR REPLACE FUNCTION infoTransaccionCliente(p_cliente_id INTEGER)
   RETURNS TABLE (fecha_transaccion DATE, monto_transaccion FLOAT, cuenta_recibio VARCHAR(255), cuenta_envio  VARCHAR(255), labor_ VARCHAR(255)) AS $$
   BEGIN
     RETURN QUERY 

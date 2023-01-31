@@ -142,6 +142,45 @@ const notificacionesT = async (req,res) => {
   }
 }
 
+const infoContratoC = async (req,res) => {
+  try{
+    const {p_cliente_id} = req.body;
+
+    const result = await pool.query('SELECT * FROM infoContratoCliente($1);',[p_cliente_id]);
+    res.json(result.rows);
+
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+}
+
+const infoTransaccionC = async (req,res) => {
+  try{
+    const {p_cliente_id} = req.body;
+
+    const result = await pool.query('SELECT * FROM infoTransaccionCliente($1);',[p_cliente_id]);
+    res.json(result.rows);
+
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+}
+
+const notificacionesC = async (req,res) => {
+  try{
+    const {p_cliente_id} = req.body;
+
+    const result = await pool.query('SELECT * FROM notificacionesC($1);',[p_cliente_id]);
+    res.json(result.rows);
+
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+}
+
 module.exports = {
   nuevoEjerce,
   getLabores,
@@ -149,5 +188,8 @@ module.exports = {
   buscarTrabajadores,
   infoContratoT,
   infoTransaccionT,
-  notificacionesT
+  notificacionesT,
+  infoContratoC,
+  infoTransaccionC,
+  notificacionesC
 };

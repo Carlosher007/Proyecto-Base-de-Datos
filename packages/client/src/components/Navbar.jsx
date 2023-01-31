@@ -50,27 +50,29 @@ function Navbar({ condition }) {
 
   function userNav() {
     return (
-      <>
-        <nav ref={navRef}>
-          <a href='/buscarServicioC'>Buscar servicios</a>
-          <a href='/notificacionT'>Notificaciones</a>
-          <a href='/dashboard'>Mis servicios</a>
-          <a href='/historialPagosC'>Historial de pagos</a>
-        </nav>
-      </>
+      <nav ref={navRef}>
+        <a href='/buscarServicioC'>Buscar servicios</a>
+        <a href='/notificacionT'>Notificaciones</a>
+        <a href='/dashboard'>Mis servicios</a>
+        <a href='/historialPagosC'>Historial de pagos</a>
+        <button className='nav-btn nav-close-btn' onClick={showNavbar}>
+          <FaTimes />
+        </button>
+      </nav>
     );
   }
 
   function workerNav() {
     return (
-      <>
-        <nav ref={navRef}>
-          <a href='/dashboardT'>Mis servicios</a>
-          <a href='/historialPagosT'>Historial de pagos</a>
-          <a href='/notificacionT'>Notificaciones</a>
-          <a href='/elegirLabortT'>Elegir Labor</a>
-        </nav>
-      </>
+      <nav ref={navRef}>
+        <a href='/dashboardT'>Mis servicios</a>
+        <a href='/historialPagosT'>Historial de pagos</a>
+        <a href='/notificacionT'>Notificaciones</a>
+        <a href='/elegirLabortT'>Elegir Labor</a>
+        <button className='nav-btn nav-close-btn' onClick={showNavbar}>
+          <FaTimes />
+        </button>
+      </nav>
     );
   }
 
@@ -83,6 +85,8 @@ function Navbar({ condition }) {
       path === '/registroC'
     );
   }
+
+  
   return (
     <header>
       {checkDashboard(currentPath) ? (
@@ -96,12 +100,13 @@ function Navbar({ condition }) {
       ) : (
         <>
           <h2>Mande</h2>
-          <h3>{user.nombre}</h3>
-          {user.tipo == 'trabajador' ? workerNav() : userNav()}
-
+          <h3>{user.nombre} : {user.tipo}</h3>
           <ToggleColorMode />
-
+          {user.tipo == 'trabajador' ? workerNav() : userNav()}
           <button onClick={desloguearse}>Salir</button>
+          <button className='nav-btn' onClick={showNavbar}>
+            <FaBars />
+          </button>
         </>
       )}
     </header>
@@ -110,6 +115,6 @@ function Navbar({ condition }) {
 
 export default Navbar;
 
-// <button className='nav-btn nav-close-btn' onClick = {showNavbar}>
-//  <FaTimes />
-// </button>
+{/* <button className='nav-btn nav-close-btn' onClick = {showNavbar}>
+ <FaTimes />
+</button> */}

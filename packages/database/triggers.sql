@@ -76,18 +76,20 @@ BEGIN
   -- Usuario asociado a ese trabajador
   SELECT user_id INTO usuario_t FROM Trabajador WHERE trabajador_id = trabajador_id_;
   -- Usuario asociado a ese cliente
-  SELECT user_id INTO usuario_c FROM Usuario WHERE user_id = NEW.cliente_id;
-
-  INSERT INTO Notificacion (fecha, asunto, user_id, mensaje)
-  VALUES (NOW(), asunto_::asunto_tipo,
-  CASE asunto_
-  WHEN 'Contrato' THEN usuario_t
-  WHEN 'Finalizacion' THEN usuario_c
-END,
-  CASE asunto_
+    SELECT user_id INTO usuario_c FROM Cliente WHERE cliente_id = NEW.cliente_id;
+  INSERT INTO Notificacion (fecha, mensaje, asunto, user_id)
+  VALUES (
+  NOW(), 
+ CASE asunto_
     WHEN 'Contrato' THEN 'Te informamos que el usuario '|| (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = usuario_c) || ' te contrato para el labor de ' || labor_ || ' en la direccion ' || direccion_
     WHEN 'Finalizacion' THEN 'El trabajador ' || (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = usuario_t) || ' ha finalizado el trabajo de ' || labor_ || ' en la direccion ' || direccion_
-  END);
+  END,
+    asunto_::asunto_tipo,
+     CASE asunto_
+  WHEN 'Contrato' THEN usuario_t
+  WHEN 'Finalizacion' THEN usuario_c
+  END
+  );
 RETURN NULL;
 END;
 $BODY$

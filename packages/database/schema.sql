@@ -96,7 +96,7 @@ CREATE TABLE Contrato (
     descripcion VARCHAR(255),
     fecha_i DATE NOT NULL,
     fecha_f DATE,
-    transaccion_id INTEGER REFERENCES Transaccion(transaccion_id) 
+    transaccion_id INTEGER UNIQUE REFERENCES Transaccion(transaccion_id) 
 );
 
 /*ADICIONALES*/
@@ -382,44 +382,57 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION buscar_trabajadores(
-  labor_id_in INT,
-  latitud_in FLOAT,
-  longitud_in FLOAT,
-  criterio VARCHAR(255)
-) RETURNS TABLE(
-  trabajador_id INTEGER,
-  nombre VARCHAR(255),
-  apellido VARCHAR(255),
-  calificacion INT,
-  precio FLOAT,
-  tipo_trabajo VARCHAR(255),
-  descripcion VARCHAR(255),
-  distancia FLOAT
-) AS $$
+CREATE OR REPLACE FUNCTION buscar_trabajadores(labor_id_in INT, latitud_in FLOAT, longitud_in FLOAT,criterio VARCHAR(255)
+) RETURNS TABLE(trabajador_id INTEGER,nombre VARCHAR(255),apellido VARCHAR(255),ejerce_id INTEGER,calificacion FLOAT,precio FLOAT,tipo_trabajo VARCHAR(255), descripcion VARCHAR(255), distancia FLOAT) 
+AS $$
 BEGIN
-  RETURN QUERY
-  SELECT
-  t.trabajador_id,
-  u.nombre,
-  u.apellido,
-  t.calificacion,
-  e.precio,
-  cast(e.tipo_trabajo as varchar),
-  e.descripcion,
-  earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
-  FROM Ejerce e
-  JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
-  JOIN Usuario u ON u.user_id = t.user_id
-  JOIN Coordenada c ON c.coor_id = u.coor_id
-  WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
-  ORDER BY
-  CASE criterio
-  WHEN 'calificacion' THEN t.calificacion
-  WHEN 'precio' THEN e.precio
-  ELSE distancia
-  END;
+  IF criterio = 'distancia' THEN
+    RETURN QUERY
+    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
+    FROM Ejerce e
+    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+    JOIN Usuario u ON u.user_id = t.user_id
+    JOIN Coordenada c ON c.coor_id = u.coor_id
+    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+    ORDER BY distancia;
+  ELSIF criterio = 'precio' THEN
+    RETURN QUERY
+    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
+    FROM Ejerce e
+    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+    JOIN Usuario u ON u.user_id = t.user_id
+    JOIN Coordenada c ON c.coor_id = u.coor_id
+    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+    ORDER BY precio;
+  ELSIF criterio = 'calificacion' THEN
+    RETURN QUERY
+    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
+    FROM Ejerce e
+    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+    JOIN Usuario u ON u.user_id = t.user_id
+    JOIN Coordenada c ON c.coor_id = u.coor_id
+    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+    ORDER BY calificacion;
+  ELSE RAISE NOTICE 'criterio no exite';
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION obtener_informacion_contrato_trabajador(p_trabajador_id INTEGER)
+RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_cliente VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT contrato.contrato_id, contrato.ejerce_id, contrato.cliente_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
+  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (labor.labor )::varchar AS nombre_labor, transaccion.monto IS NOT NULL AS is_pagado
+  FROM Contrato contrato
+  JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
+  JOIN Cliente cliente ON contrato.cliente_id = cliente.cliente_id
+  JOIN Trabajador trabajador ON ejerce.trabajador_id = trabajador.trabajador_id
+  JOIN Labor labor ON ejerce.labor_id = labor.labor_id
+-- Join a transaccion para ver si esta pagado
+  JOIN Transaccion transaccion ON contrato.transaccion_id = transaccion.transaccion_id
+  JOIN Usuario usuario ON cliente.user_id = usuario.user_id
+  WHERE trabajador.trabajador_id = p_trabajador_id;
+END;
+$$ LANGUAGE plpgsql;

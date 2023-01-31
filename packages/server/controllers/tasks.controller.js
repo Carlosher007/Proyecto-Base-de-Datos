@@ -1,5 +1,6 @@
 /** @format */
 
+const { json } = require('express');
 const pool = require('../db'); //pool es la conexion a la base de datos
 
 const nuevoEjerce = async (req, res) => {
@@ -74,8 +75,37 @@ const nuevoContrato = async (req,res) => {
   }
 }
 
+const buscarTrabajadores = async (req,res) => {
+  try{
+    const {cliente_id, labor ,criterio} = req.body
+    
+    console.log(req.body);
+
+    const labores = await pool.query('SELECT labor_id FROM Labor WHERE labor = $1::labor_tipo',[labor]);
+    const labor_id_in = labores.rows[0].labor_id;
+
+    const usuario = await pool.query('SELECT user_id FROM Cliente WHERE cliente_id = $1', [cliente_id]);
+    const user_id = usuario.rows[0].user_id;
+
+    const coor = await pool.query('SELECT coor_id FROM Usuario WHERE user_id = $1', [user_id]);
+    const coor_id = coor.rows[0].coor_id;
+
+    const coordenada = await pool.query('SELECT latitud,longitud FROM Coordenada WHERE coor_id = $1',[coor_id]);
+    
+    const latitud_in = coordenada.rows[0].latitud;
+    const longitud_in = coordenada.rows[0].longitud;
+
+    const result = await pool.query('SELECT * FROM buscar_trabajadores($1,$2,$3,$4);', [labor_id_in,latitud_in,longitud_in,criterio]);
+    res.json(result.rows);
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+};
+
 module.exports = {
   nuevoEjerce,
   getLabores,
-  nuevoContrato
+  nuevoContrato,
+  buscarTrabajadores
 };

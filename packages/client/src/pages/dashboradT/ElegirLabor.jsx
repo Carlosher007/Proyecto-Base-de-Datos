@@ -19,6 +19,8 @@ const ElegirLabor = () => {
   const { user, setUser } = useContext(AccountContext);
   const [labores, setLabores] = useState([]);
 
+  console.log(user)
+
   useEffect(() => {
     loadLabores(user.id);
   }, []);

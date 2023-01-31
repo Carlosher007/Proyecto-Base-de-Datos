@@ -222,13 +222,18 @@ module.exports.attempRegisterT = async (req, res) => {
             req.body.celular,
           ]
         );
-        const newTrabajador = await pool.query(
+        const newUsuario = await pool.query(
           'SELECT * FROM Usuario WHERE celular = $1',
           [req.body.celular]
         );
 
+        const newTrabajador = await pool.query(
+          'SELECT * FROM Trabajador WHERE user_id = $1',
+          [newUsuario.rows[0].user_id]
+        );
+
         req.session.user = {
-          id: newTrabajador.rows[0].user_id,
+          id: newTrabajador.rows[0].trabajador_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
           foto_perfil: req.body.foto_perfil,
@@ -236,7 +241,7 @@ module.exports.attempRegisterT = async (req, res) => {
         };
         res.json({
           loggedIn: true,
-          id: newTrabajador.rows[0].user_id,
+          id: newTrabajador.rows[0].trabajador_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
           foto_perfil: req.body.foto_perfil,
@@ -247,11 +252,11 @@ module.exports.attempRegisterT = async (req, res) => {
   }
 };
 
-module.exports.attemptLogout = async (req,res) => {
+module.exports.attemptLogout = async (req, res) => {
   res.clearCookie('sid');
   // req.session.destroy();
-  res.json({loggedIn: false});
-}
+  res.json({ loggedIn: false });
+};
 
 module.exports.attempRegisterC = async (req, res) => {
   //Verificamos los valores unicos
@@ -281,12 +286,11 @@ module.exports.attempRegisterC = async (req, res) => {
       } else {
         //Registramos
         const hashedPass = await bcrypt.hash(req.body.contrasena, 10);
-        const hashedMedioPago = await bcrypt.hash(req.body.numero_cuenta,10);
+        const hashedMedioPago = await bcrypt.hash(req.body.numero_cuenta, 10);
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
         req.body.recibo = req.body.recibo + req.body.numero_cuenta;
-        
 
         await pool.query(
           'CALL crear_cliente($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -304,13 +308,18 @@ module.exports.attempRegisterC = async (req, res) => {
             req.body.tipo,
           ]
         );
-        const newCliente = await pool.query(
+        const newUsuario = await pool.query(
           'SELECT * FROM Usuario WHERE celular = $1',
           [req.body.celular]
         );
 
+        const newCliente = await pool.query(
+          'SELECT * FROM Cliente WHERE user_id = $1',
+          [newUsuario.rows[0].user_id]
+        );
+
         req.session.user = {
-          id: newCliente.rows[0].user_id,
+          id: newCliente.rows[0].cliente_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
           numero_cuenta: hashedMedioPago,
@@ -318,7 +327,7 @@ module.exports.attempRegisterC = async (req, res) => {
         };
         res.json({
           loggedIn: true,
-          id: newCliente.rows[0].user_id,
+          id: newCliente.rows[0].cliente_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
           numero_cuenta: hashedMedioPago,

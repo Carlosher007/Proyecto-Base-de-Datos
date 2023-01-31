@@ -4,7 +4,8 @@
 const { Router } = require('express');
 const {
   nuevoEjerce,
-  getLabores
+  getLabores,
+  nuevoContrato
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -12,5 +13,7 @@ const router = Router();
 router.post('/nuevoEjerce', nuevoEjerce);
 
 router.get('/getLabores/:id',getLabores);
+
+router.post('/nuevoContrato',nuevoContrato);
 
 module.exports = router;

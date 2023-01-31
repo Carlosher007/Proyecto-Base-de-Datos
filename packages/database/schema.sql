@@ -1,4 +1,3 @@
-
 CREATE TABLE Coordenada (
   coor_id SERIAL PRIMARY KEY,
   latitud FLOAT NOT NULL,
@@ -72,7 +71,7 @@ CREATE TABLE Notificacion (
 );
 
 CREATE TABLE Transaccion (
-    transanccion_id SERIAL PRIMARY KEY,
+    transaccion_id SERIAL PRIMARY KEY,
     fecha DATE,
     monto FLOAT
 );
@@ -97,7 +96,7 @@ CREATE TABLE Contrato (
     descripcion VARCHAR(255),
     fecha_i DATE NOT NULL,
     fecha_f DATE,
-    transaccion_id INTEGER REFERENCES Transaccion(transanccion_id) 
+    transaccion_id INTEGER REFERENCES Transaccion(transaccion_id) 
 );
 
 /*ADICIONALES*/

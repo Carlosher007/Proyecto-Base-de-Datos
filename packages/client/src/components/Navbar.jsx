@@ -40,7 +40,6 @@ function Navbar({ condition }) {
         .then((data) => {
           if (!data) return;
           setUser({ ...data });
-          console.log("deslogueado")
           // setUser({ loggedIn: false });
           navigate('/');
         });
@@ -69,6 +68,7 @@ function Navbar({ condition }) {
           <a href='/dashboardT'>Mis servicios</a>
           <a href='/historialPagosT'>Historial de pagos</a>
           <a href='/notificacionT'>Notificaciones</a>
+          <a href='/elegirLabortT'>Elegir Labor</a>
         </nav>
       </>
     );
@@ -83,7 +83,6 @@ function Navbar({ condition }) {
       path === '/registroC'
     );
   }
-  console.log(currentPath);
   return (
     <header>
       {checkDashboard(currentPath) ? (

@@ -23,7 +23,6 @@ const LoginT = () => {
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
-        //  console.log(JSON.stringify(vals));
         fetch('http://localhost:8000/auth/loginT', {
           method: 'POST',
           credentials: 'include',
@@ -36,7 +35,6 @@ const LoginT = () => {
             return;
           })
           .then((res) => {
-            // console.log(res);
             if (!res || !res.ok || res.status >= 400) {
               return;
             }
@@ -74,6 +72,7 @@ const LoginT = () => {
         />
 
         <TextField
+          type='password'
           name='contrasena'
           placeholder='Digite la contraseña'
           autoComplete='off'

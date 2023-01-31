@@ -204,7 +204,7 @@ module.exports.attempRegisterT = async (req, res) => {
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
         req.body.foto_perfil = req.body.foto_perfil + req.body.cuenta;
-        req.body.doc_foto = req.body.foto_perfil + req.body.cuenta;
+        req.body.doc_foto = req.body.doc_foto + req.body.cuenta;
 
         await pool.query(
           'CALL crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -286,6 +286,7 @@ module.exports.attempRegisterC = async (req, res) => {
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
         req.body.recibo = req.body.recibo + req.body.numero_cuenta;
+        
 
         await pool.query(
           'CALL crear_cliente($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',

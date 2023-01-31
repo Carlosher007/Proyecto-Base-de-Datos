@@ -23,7 +23,6 @@ const Inicio = () => {
       // updateUserType('cliente');
     // };
 
-  //  console.log("user ", user)
 
   return (
     <div className='body'>

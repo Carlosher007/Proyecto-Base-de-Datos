@@ -75,6 +75,7 @@ const LoginC = () => {
           label='Celular'
         />
         <TextField
+          type='password'
           name='contrasena'
           placeholder='Digite la contraseña'
           autoComplete='off'

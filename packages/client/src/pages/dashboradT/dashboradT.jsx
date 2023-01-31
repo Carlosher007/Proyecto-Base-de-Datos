@@ -53,7 +53,6 @@ const misServicios = [
 
 const DashboardT = () => {
   const { user, setUser } = useContext(AccountContext);
-console.log(user)
   return <CardList data={misServicios} renderType='misServiciosT' />;
 };
 

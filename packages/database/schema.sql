@@ -382,7 +382,6 @@ $$ LANGUAGE plpgsql;
 
 
 
-
 CREATE OR REPLACE FUNCTION buscar_trabajadores(
   labor_id_in INT,
   latitud_in FLOAT,

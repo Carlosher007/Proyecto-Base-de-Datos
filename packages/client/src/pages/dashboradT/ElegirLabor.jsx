@@ -35,9 +35,10 @@ const ElegirLabor = () => {
         return;
       })
       .then((res) => {
-        // console.log(res);
         if (!res || !res.ok || res.status >= 400) {
-          toast.warning('No hay labores disponibles, lo mejor es que vayas a dashboard')
+          toast.warning(
+            'No hay labores disponibles, lo mejor es que vayas a dashboard'
+          );
           return;
         }
         return res.json();
@@ -58,8 +59,6 @@ const ElegirLabor = () => {
       toast.error('El precio debe ser un número');
       return;
     } else {
-      console.log(formData);
-
       // const response = await fetch('http://localhost:8000/nuevoEjerce', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
@@ -71,7 +70,6 @@ const ElegirLabor = () => {
       //   }),
       // });
       // await response.json();
-      // console.log(response);
 
       fetch('http://localhost:8000/nuevoEjerce', {
         method: 'POST',
@@ -90,13 +88,12 @@ const ElegirLabor = () => {
           return;
         })
         .then((res) => {
-          // console.log(res);
           if (!res || !res.ok || res.status >= 400) {
+            toast.warning(
+              'Es posible que ya este asociado a ese labor, intente eligiendo otro'
+            );
             return;
           }
-          toast.warning(
-            'Es posible que ya este asociado a ese labor, intente eligiendo otro'
-          );
           return res.json();
         })
         .then((data) => {

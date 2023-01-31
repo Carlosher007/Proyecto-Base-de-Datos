@@ -9,9 +9,13 @@ import ButtonLoading from '../../components/ButtonLoading';
 import Input from '../../components/Input';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
+
 const ElegirLabor = () => {
   const { form, formData, updateFormData } = useFormData();
-
+  const { user, setUser } = useContext(AccountContext);
+  const {labores, setLabores} = useContext(null)
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -29,7 +33,7 @@ const ElegirLabor = () => {
 
   return (
     <div className='p-4'>
-      <h1 className='text-2xl font-bold text-gray-900'>Editar Objetivo</h1>
+      <h1 className='text-2xl font-bold text-white-900'>Editar Objetivo</h1>
       <form ref={form} onChange={updateFormData} onSubmit={submitForm}>
         <DropDown
           label='Labor'
@@ -44,6 +48,7 @@ const ElegirLabor = () => {
           options={Enum_Tipo_Pago}
         />
         <Input label='Precio' name='precio' required={true} />
+        <Input label='Descripcion' name='descripcion' required={true} />
         <ButtonLoading
           text='Confirmar'
           disabled={Object.keys(formData).length === 0}

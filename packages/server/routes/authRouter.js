@@ -50,4 +50,5 @@ router.post('/registroT', validateFormRegisterT, attempRegisterT)
 
 router.post('/registroC', validateFormRegisterC, attempRegisterC);
 
+
 module.exports = router;

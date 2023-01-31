@@ -8,7 +8,7 @@ const cors = require('cors'); //es un middleware que permite que el servidor ace
 const session = require('express-session');
 const authRouter = require('./routes/authRouter'); //este es un enrutador personalizado para manejar las solicitudes relacionadas con la autenticación.
 const morgan = require('morgan');
-const taskRoutes = require('./routes/tasks.routes');
+const routes = require('./routes/tasks.routes');
 require('dotenv').config();
 const Redis = require('ioredis');
 const RedisStore = require('connect-redis')(session);
@@ -53,7 +53,7 @@ app.use(
 );
 
 app.use('/auth', authRouter);
-app.use(taskRoutes);
+app.use(routes);
 
 app.get('/', (req, res) => {
   res.json('hi');

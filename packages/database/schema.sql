@@ -381,3 +381,45 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
+
+CREATE OR REPLACE FUNCTION buscar_trabajadores(
+  labor_id_in INT,
+  latitud_in FLOAT,
+  longitud_in FLOAT,
+  criterio VARCHAR(255)
+) RETURNS TABLE(
+  trabajador_id INTEGER,
+  nombre VARCHAR(255),
+  apellido VARCHAR(255),
+  calificacion INT,
+  precio FLOAT,
+  tipo_trabajo VARCHAR(255),
+  descripcion VARCHAR(255),
+  distancia FLOAT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+  t.trabajador_id,
+  u.nombre,
+  u.apellido,
+  t.calificacion,
+  e.precio,
+  cast(e.tipo_trabajo as varchar),
+  e.descripcion,
+  earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
+  FROM Ejerce e
+  JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+  JOIN Usuario u ON u.user_id = t.user_id
+  JOIN Coordenada c ON c.coor_id = u.coor_id
+  WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+  ORDER BY
+  CASE criterio
+  WHEN 'calificacion' THEN t.calificacion
+  WHEN 'precio' THEN e.precio
+  ELSE distancia
+  END;
+END;
+$$ LANGUAGE plpgsql;

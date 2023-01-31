@@ -35,7 +35,7 @@ CREATE TABLE Trabajador (
     trabajador_id SERIAL PRIMARY KEY,
     foto_perfil VARCHAR(255) NOT NULL,
     disponible BOOLEAN,
-    calificacion INTEGER,
+    calificacion FLOAT,
     doc_foto VARCHAR(255) UNIQUE NOT NULL,
     cuenta VARCHAR(255) UNIQUE NOT NULL,
     user_id INTEGER REFERENCES Usuario(user_id) UNIQUE NOT NULL
@@ -93,7 +93,7 @@ CREATE TABLE Contrato (
     contrato_id SERIAL PRIMARY KEY,
     ejerce_id INTEGER REFERENCES Ejerce(ejerce_id) NOT NULL,
     cliente_id INTEGER REFERENCES Cliente(cliente_id) NOT NULL,
-    calificacion INTEGER ,
+    calificacion FLOAT ,
     descripcion VARCHAR(255),
     fecha_i DATE NOT NULL,
     fecha_f DATE,
@@ -307,7 +307,11 @@ AFTER UPDATE ON Contrato
 FOR EACH ROW
 EXECUTE FUNCTION update_trabajador_disponibilidad();
 
-
+CREATE OR REPLACE PROCEDURE actualizar_calificacion(p_contrato_id INTEGER, p_calificacion INTEGER) AS $$
+BEGIN
+  UPDATE Contrato SET calificacion = p_calificacion WHERE contrato_id = p_contrato_id;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Trigger para actualizar la calificación promedio de un trabajador al agregar una calificación a un contrato:
 CREATE OR REPLACE FUNCTION update_promedio_calificacion()
@@ -335,35 +339,45 @@ CREATE OR REPLACE FUNCTION enviar_notificacion()
 RETURNS TRIGGER
 AS
 $BODY$
-  DECLARE direccion VARCHAR(255);
-  DECLARE labor VARCHAR(255);
-  DECLARE asunto VARCHAR(255);
-  DECLARE trabajador_id INTEGER;
+  DECLARE direccion_ VARCHAR(255);
+  DECLARE labor_ VARCHAR(255);
+  DECLARE asunto_ VARCHAR(255);
+  DECLARE trabajador_id_ INTEGER;
 BEGIN
-  SELECT direccion FROM Coordenada WHERE coor_id = (SELECT coor_id FROM Usuario WHERE user_id = NEW.cliente_id) INTO direccion;
-  SELECT labor FROM Labor WHERE labor_id = (SELECT labor_id FROM Ejerce WHERE ejerce_id = NEW.ejerce_id) INTO labor;
+  SELECT direccion INTO direccion_ FROM Coordenada WHERE coor_id = (SELECT coor_id FROM Usuario WHERE user_id = NEW.cliente_id);
+  SELECT labor INTO labor_ FROM Labor WHERE labor_id = (SELECT labor_id FROM Ejerce WHERE ejerce_id = NEW.ejerce_id);
   SELECT (CASE
   WHEN NEW.fecha_f IS NULL THEN 'Contrato'
     ELSE 'Finalizacion'
-  END) INTO asunto;
-  SELECT trabajador_id FROM Ejerce WHERE ejerce_id = NEW.ejerce_id INTO trabajador_id;
+  END) INTO asunto_;
+  SELECT trabajador_id INTO trabajador_id_ FROM Ejerce WHERE ejerce_id = NEW.ejerce_id;
 
-  INSERT INTO Notificaciones (fecha, asunto, user_id, mensaje)
-  VALUES (NOW(), asunto,
-  CASE asunto
-  WHEN 'Contrato' THEN trabajador_id
+  INSERT INTO Notificacion (fecha, asunto, user_id, mensaje)
+  VALUES (NOW(), asunto_::asunto_tipo,
+  CASE asunto_
+  WHEN 'Contrato' THEN trabajador_id_
   WHEN 'Finalizacion' THEN NEW.cliente_id
 END,
-  CASE asunto
-    WHEN 'Contrato' THEN 'Te informamos que el usuario '|| (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = NEW.cliente_id) || ' te contrato para el labor de ' || labor || ' en la direccion ' || direccion
-    WHEN 'Finalizacion' THEN 'El trabajador ' || (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = trabajador_id) || ' ha finalizado el trabajo de ' || labor || ' en la direccion ' || direccion
+  CASE asunto_
+    WHEN 'Contrato' THEN 'Te informamos que el usuario '|| (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = NEW.cliente_id) || ' te contrato para el labor de ' || labor_ || ' en la direccion ' || direccion_
+    WHEN 'Finalizacion' THEN 'El trabajador ' || (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = trabajador_id_) || ' ha finalizado el trabajo de ' || labor_ || ' en la direccion ' || direccion_
   END);
 RETURN NULL;
 END;
 $BODY$
 LANGUAGE plpgsql;
 
+
 CREATE TRIGGER notificar_usuario
 AFTER INSERT ON Contrato
 FOR EACH ROW
 EXECUTE FUNCTION enviar_notificacion();
+
+
+CREATE OR REPLACE PROCEDURE actualizar_fecha_f(p_id INTEGER)
+AS $$
+BEGIN
+  UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+

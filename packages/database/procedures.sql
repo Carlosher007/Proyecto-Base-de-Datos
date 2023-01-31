@@ -68,36 +68,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- Crear un registro en la relacion ejerce
-CREATE OR REPLACE PROCEDURE trabajadorejerce(tid INTEGER, labor_ VARCHAR(255), tipo_trabajo VARCHAR(255), precio FLOAT, descripcion VARCHAR(255)) AS $$
-    DECLARE lid INTEGER;
-    DECLARE result RECORD;
-  BEGIN
-    FOR result IN SELECT labor_id FROM Ejerce WHERE trabajador_id = tid
-    LOOP
-      SELECT labor_id FROM Labor NATURAL JOIN Ejerce WHERE labor_id = result.labor_id AND labor = labor_::labor_tipo INTO lid;
-      IF lid IS NOT NULL THEN
-        raise notice 'Ya tiene ese labor';
-        RETURN;
-      END IF;
-    END LOOP;
-    SELECT labor_id FROM Labor WHERE labor_::labor_tipo = labor INTO lid;
-    INSERT INTO Ejerce(trabajador_id,labor_id,tipo_trabajo,precio,descripcion) VALUES (tid,lid,tipo_trabajo::tipo_trabajo,precio,descripcion);
-  END;
-$$ LANGUAGE plpgsql;
-
 -- Calificar un servicio
-CREATE OR REPLACE PROCEDURE actualizar_calificacion(p_contrato_id INTEGER, p_calificacion INTEGER) AS $$
+CREATE OR REPLACE PROCEDURE actualizar_calificacion(p_contrato_id INTEGER, p_calificacion FLOAT) AS $$
 BEGIN
   UPDATE Contrato SET calificacion = p_calificacion WHERE contrato_id = p_contrato_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- fecha de finalizacion de un contrato.
-CREATE OR REPLACE PROCEDURE actualizar_fecha_f(p_id INTEGER)
+CREATE OR REPLACE PROCEDURE actualizar_fecha_f(cid INTEGER)
 AS $$
 BEGIN
-  UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = p_id;
+  UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = cid;
 END;
+$$ LANGUAGE plpgsql;
+
+
+-- realizar pago
+CREATE OR REPLACE PROCEDURE realizarPago(cid INTEGER, pago FLOAT) AS $$
+    BEGIN
+        UPDATE Transaccion SET monto = pago, fecha = NOW() FROM Transaccion T JOIN Contrato C ON T.transaccion_id = C.transaccion_id;   
+    END;
 $$ LANGUAGE plpgsql;

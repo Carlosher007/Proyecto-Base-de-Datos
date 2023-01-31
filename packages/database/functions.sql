@@ -138,40 +138,38 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- Historial de pagos para trabajador
-  CREATE OR REPLACE FUNCTION obtener_informacion_transacciones_trabajador(p_trabajador_id INTEGER)
-  RETURNS TABLE (fecha_transaccion DATE, monto_transaccion FLOAT, cuenta_enviada VARCHAR(255), cuentarecibida VARCHAR(255), labor VARCHAR(255)) AS $$
+-- transacciones trabajador
+ CREATE OR REPLACE FUNCTION infoTransaccionTrabajador(tid INTEGER)
+  RETURNS TABLE (fecha_transaccion DATE, monto_transaccion FLOAT, cuenta_recibio VARCHAR(255), cuenta_envio  VARCHAR(255), labor_ VARCHAR(255)) AS $$
   BEGIN
     RETURN QUERY 
     SELECT 
-      trans.fecha AS fecha_transaccion,
-      trans.monto AS monto_transaccion,
-      trab.cuenta AS cuenta_enviada,
-      cli.numero_cuenta AS cuentarecibida,
-      lab.labor::varchar AS labor
-    FROM 
-      Transaccion trans
-      INNER JOIN Trabajador trab ON trans.transaccion_id = trab.trabajador_id
-      INNER JOIN Cliente cli ON trans.transaccion_id = cli.cliente_id
-      INNER JOIN Ejerce ejer ON trans.transaccion_id = ejer.ejerce_id
-      INNER JOIN Labor lab ON ejer.labor_id = lab.labor_id
-    WHERE 
-      trab.trabajador_id = p_trabajador_id
-    AND trans.fecha IS NOT NULL;
+      T.fecha AS fecha_transaccion,
+      T.monto AS monto_transaccion,
+      Tr.cuenta AS cuenta_recibio,
+      cliente.numero_cuenta AS cuenta_envio,
+      L.labor::varchar AS labor_
+    FROM Contrato C
+  JOIN Ejerce E ON C.ejerce_id = E.ejerce_id
+  JOIN Cliente cliente ON C.cliente_id = cliente.cliente_id
+  JOIN Trabajador Tr ON E.trabajador_id = Tr.trabajador_id
+  JOIN Labor L ON E.labor_id = L.labor_id
+  JOIN Transaccion T ON C.transaccion_id = T.transaccion_id
+  WHERE Tr.trabajador_id = tid
+  AND T.fecha IS NOT NULL;
   END;
   $$ LANGUAGE plpgsql;
 
-
   -- notificaciones para trabajador
-CREATE OR REPLACE FUNCTION obtener_notificaciones_trabajador(p_trabajador_id INTEGER)
+CREATE OR REPLACE FUNCTION notificacionesT(p_trabajador_id INTEGER)
 RETURNS TABLE (notificacion_id INTEGER, fecha DATE, mensaje VARCHAR(255), asunto VARCHAR(255)) AS $$
 BEGIN
   RETURN QUERY
-  SELECT notificacion.notificacion_id, notificacion.fecha, notificacion.mensaje, notificacion.asunto::varchar
+  SELECT N.notificacion_id, N.fecha, N.mensaje, N.asunto::varchar
   -- tenemos en cuenta que la notificacion esta asociada a un usuario, es decir tiene user_id y no trabajador_id
-  FROM Notificacion notificacion
-  JOIN Usuario usuario ON notificacion.user_id = usuario.user_id
-  JOIN Trabajador trabajador ON usuario.user_id = trabajador.user_id
-  WHERE trabajador.trabajador_id = p_trabajador_id;
+  FROM Notificacion N
+  JOIN Usuario U ON N.user_id = U.user_id
+  JOIN Trabajador T ON U.user_id = T.user_id
+  WHERE T.trabajador_id = p_trabajador_id;
 END;
 $$ LANGUAGE plpgsql;

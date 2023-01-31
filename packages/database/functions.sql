@@ -139,7 +139,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- transacciones trabajador
- CREATE OR REPLACE FUNCTION infoTransaccionTrabajador(tid INTEGER)
+ CREATE OR REPLACE FUNCTION infoTransaccionTrabajador(p_trabajador_id INTEGER)
   RETURNS TABLE (fecha_transaccion DATE, monto_transaccion FLOAT, cuenta_recibio VARCHAR(255), cuenta_envio  VARCHAR(255), labor_ VARCHAR(255)) AS $$
   BEGIN
     RETURN QUERY 
@@ -155,7 +155,7 @@ $$ LANGUAGE plpgsql;
   JOIN Trabajador Tr ON E.trabajador_id = Tr.trabajador_id
   JOIN Labor L ON E.labor_id = L.labor_id
   JOIN Transaccion T ON C.transaccion_id = T.transaccion_id
-  WHERE Tr.trabajador_id = tid
+  WHERE Tr.trabajador_id = p_trabajador_id
   AND T.fecha IS NOT NULL;
   END;
   $$ LANGUAGE plpgsql;

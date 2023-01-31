@@ -129,11 +129,25 @@ const infoTransaccionT = async (req,res) => {
   }
 }
 
+const notificacionesT = async (req,res) => {
+  try{
+    const {p_trabajador_id} = req.body;
+
+    const result = await pool.query('SELECT * FROM notificacionesT($1);',[p_trabajador_id]);
+    res.json(result.rows);
+
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+}
+
 module.exports = {
   nuevoEjerce,
   getLabores,
   nuevoContrato,
   buscarTrabajadores,
   infoContratoT,
-  infoTransaccionT
+  infoTransaccionT,
+  notificacionesT
 };

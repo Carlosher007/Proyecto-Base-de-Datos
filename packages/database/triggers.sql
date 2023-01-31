@@ -95,6 +95,6 @@ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER notificar_usuario
-AFTER INSERT ON Contrato
+AFTER INSERT OR UPDATE ON Contrato
 FOR EACH ROW
 EXECUTE FUNCTION enviar_notificacion();

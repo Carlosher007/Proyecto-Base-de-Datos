@@ -8,7 +8,8 @@ const {
   nuevoContrato,
   buscarTrabajadores,
   infoContratoT,
-  infoTransaccionT
+  infoTransaccionT,
+  notificacionesT
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -24,5 +25,7 @@ router.get('/buscarTrabajadores', buscarTrabajadores);
 router.get('/infoContratoT',infoContratoT)
 
 router.get('/infoTransaccionT',infoTransaccionT);
+
+router.get('/notificacionesT',notificacionesT);
 
 module.exports = router;

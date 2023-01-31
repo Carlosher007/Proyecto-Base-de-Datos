@@ -89,23 +89,6 @@ CREATE TABLE Ejerce (
 );
 
 
-CREATE OR REPLACE PROCEDURE trabajadorejerce(tid INTEGER, labor_ VARCHAR(255), tipo_trabajo VARCHAR(255), precio FLOAT, descripcion VARCHAR(255)) AS $$
-    DECLARE lid INTEGER;
-    DECLARE result RECORD;
-  BEGIN
-    FOR result IN SELECT labor_id FROM Ejerce WHERE trabajador_id = tid
-    LOOP
-      SELECT labor_id FROM Labor NATURAL JOIN Ejerce WHERE labor_id = result.labor_id AND labor = labor_::labor_tipo INTO lid;
-      IF lid IS NOT NULL THEN
-        raise notice 'Ya tiene ese labor';
-        RETURN;
-      END IF;
-    END LOOP;
-    SELECT labor_id FROM Labor WHERE labor_::labor_tipo = labor INTO lid;
-    INSERT INTO Ejerce(trabajador_id,labor_id,tipo_trabajo,precio,descripcion) VALUES (tid,lid,tipo_trabajo::tipo_trabajo,precio,descripcion);
-  END;
-$$ LANGUAGE plpgsql;
-
 CREATE TABLE Contrato (
     contrato_id SERIAL PRIMARY KEY,
     ejerce_id INTEGER REFERENCES Ejerce(ejerce_id) NOT NULL,
@@ -202,6 +185,23 @@ SELECT user_id FROM Usuario U WHERE U.email = email_ INTO id;
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE PROCEDURE trabajadorejerce(tid INTEGER, labor_ VARCHAR(255), tipo_trabajo VARCHAR(255), precio FLOAT, descripcion VARCHAR(255)) AS $$
+    DECLARE lid INTEGER;
+    DECLARE result RECORD;
+  BEGIN
+    FOR result IN SELECT labor_id FROM Ejerce WHERE trabajador_id = tid
+    LOOP
+      SELECT labor_id FROM Labor NATURAL JOIN Ejerce WHERE labor_id = result.labor_id AND labor = labor_::labor_tipo INTO lid;
+      IF lid IS NOT NULL THEN
+        raise notice 'Ya tiene ese labor';
+        RETURN;
+      END IF;
+    END LOOP;
+    SELECT labor_id FROM Labor WHERE labor_::labor_tipo = labor INTO lid;
+    INSERT INTO Ejerce(trabajador_id,labor_id,tipo_trabajo,precio,descripcion) VALUES (tid,lid,tipo_trabajo::tipo_trabajo,precio,descripcion);
+  END;
+$$ LANGUAGE plpgsql;
 
 --Verificar loguin de trabajador
 CREATE OR REPLACE FUNCTION verificar_login_trabajador(user_id_ INTEGER) RETURNS TABLE (id INTEGER) AS $$

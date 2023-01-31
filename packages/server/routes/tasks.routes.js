@@ -11,6 +11,6 @@ const router = Router();
 
 router.post('/nuevoEjerce', nuevoEjerce);
 
-router.get('/getLabores',getLabores);
+router.get('/getLabores/:id',getLabores);
 
 module.exports = router;

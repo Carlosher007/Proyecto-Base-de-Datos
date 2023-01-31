@@ -12,8 +12,8 @@ const Enum_Medio_Pago = {
 }
 
 const Enum_Tipo_Pago = {
-  HORA: "Por hora",
-  UNIDAD: "Por unidad de trabajo",
-}
+  precio_por_hora: 'Por hora',
+  unidad_de_trabajo: 'Por unidad de trabajo',
+};
 
 export { Enum_Labores, Enum_Medio_Pago, Enum_Tipo_Pago };

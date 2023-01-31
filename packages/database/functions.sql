@@ -119,7 +119,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Tabla con informacion de los contratos que tiene el trabajador 
-CREATE OR REPLACE FUNCTION obtener_informacion_contrato_trabajador(p_trabajador_id INTEGER)
+CREATE OR REPLACE FUNCTION infoContratoTrabajador(p_trabajador_id INTEGER)
 RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_cliente VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
 BEGIN
   RETURN QUERY

@@ -63,6 +63,8 @@ $BODY$
   DECLARE labor_ VARCHAR(255);
   DECLARE asunto_ VARCHAR(255);
   DECLARE trabajador_id_ INTEGER;
+  DECLARE usuario_t INTEGER;
+  DECLARE usuario_c INTEGER;
 BEGIN
   SELECT direccion INTO direccion_ FROM Coordenada WHERE coor_id = (SELECT coor_id FROM Usuario WHERE user_id = NEW.cliente_id);
   SELECT labor INTO labor_ FROM Labor WHERE labor_id = (SELECT labor_id FROM Ejerce WHERE ejerce_id = NEW.ejerce_id);
@@ -71,16 +73,20 @@ BEGIN
     ELSE 'Finalizacion'
   END) INTO asunto_;
   SELECT trabajador_id INTO trabajador_id_ FROM Ejerce WHERE ejerce_id = NEW.ejerce_id;
+  -- Usuario asociado a ese trabajador
+  SELECT user_id INTO usuario_t FROM Trabajador WHERE trabajador_id = trabajador_id_;
+  -- Usuario asociado a ese cliente
+  SELECT user_id INTO usuario_c FROM Usuario WHERE user_id = NEW.cliente_id;
 
   INSERT INTO Notificacion (fecha, asunto, user_id, mensaje)
   VALUES (NOW(), asunto_::asunto_tipo,
   CASE asunto_
-  WHEN 'Contrato' THEN trabajador_id_
-  WHEN 'Finalizacion' THEN NEW.cliente_id
+  WHEN 'Contrato' THEN usuario_t
+  WHEN 'Finalizacion' THEN usuario_c
 END,
   CASE asunto_
-    WHEN 'Contrato' THEN 'Te informamos que el usuario '|| (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = NEW.cliente_id) || ' te contrato para el labor de ' || labor_ || ' en la direccion ' || direccion_
-    WHEN 'Finalizacion' THEN 'El trabajador ' || (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = trabajador_id_) || ' ha finalizado el trabajo de ' || labor_ || ' en la direccion ' || direccion_
+    WHEN 'Contrato' THEN 'Te informamos que el usuario '|| (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = usuario_c) || ' te contrato para el labor de ' || labor_ || ' en la direccion ' || direccion_
+    WHEN 'Finalizacion' THEN 'El trabajador ' || (SELECT nombre || ' ' || apellido FROM Usuario WHERE user_id = usuario_t) || ' ha finalizado el trabajo de ' || labor_ || ' en la direccion ' || direccion_
   END);
 RETURN NULL;
 END;

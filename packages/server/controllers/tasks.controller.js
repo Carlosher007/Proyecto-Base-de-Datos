@@ -49,6 +49,7 @@ const getLabores = async (req, res) => {
   }
 };
 
+//post /nuevoContrato
 const nuevoContrato = async (req,res) => {
   try{
     const {ejerce_id,cliente_id,cantidad_trabajo,descripcion} = req.body;

@@ -12,8 +12,18 @@ const Contratar = (props) => {
   
   const { user, setUser } = useContext(AccountContext);
   const { eid } = useParams();
-  console.log(eid)
-  // console.log(eid);
+  const [contrato, setContrato] = useState({});
+
+
+  useEffect(() => {
+    loadContrato();
+  }, []);
+
+  const loadContrato = async () => {
+    setContrato({})
+  };
+
+
   return <div>Contratar</div>;
 };
 

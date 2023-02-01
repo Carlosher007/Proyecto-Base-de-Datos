@@ -78,4 +78,12 @@ CREATE VIEW laboresDisponibles AS
   JOIN Ejerce E ON L.labor_id = E.labor_id
   JOIN Trabajador T ON T.trabajador_id = E.trabajador_id AND T.disponible = TRUE
   GROUP BY labor
-  ;
+;
+
+CREATE VIEW infoServicio AS
+  SELECT E.ejerce_id, E.trabajador_id, nombre, apellido, L.labor_id, L.labor, tipo_trabajo, precio, descripcion
+  FROM Ejerce E
+  JOIN Trabajador T ON E.trabajador_id = T.trabajador_id
+  JOIN Usuario U ON T.user_id = U.user_id
+  JOIN Labor L ON E.labor_id = L.labor_id
+;  

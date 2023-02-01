@@ -16,7 +16,8 @@ const {
   calificarServicio,
   realizarPago,
   finalizarContrato,
-  laboresDisponibles
+  laboresDisponibles,
+  infoServicio
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -48,5 +49,7 @@ router.put('/realizarPago',realizarPago);
 router.put('/finalizarContrato/:cid',finalizarContrato);
 
 router.get('/laboresDisponibles',laboresDisponibles);
+
+router.get('/infoServicio', infoServicio);
 
 module.exports = router;

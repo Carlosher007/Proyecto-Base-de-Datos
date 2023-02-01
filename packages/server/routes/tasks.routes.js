@@ -28,7 +28,7 @@ router.post('/nuevoContrato',nuevoContrato);
 
 router.get('/buscarTrabajadores', buscarTrabajadores);
 
-router.get('/infoContratoT',infoContratoT)
+router.get('/infoContratoT/:tid',infoContratoT)
 
 router.get('/infoTransaccionT',infoTransaccionT);
 
@@ -44,6 +44,6 @@ router.put('/calificarServicio',calificarServicio);
 
 router.put('/realizarPago',realizarPago);
 
-router.put('/finalizarContrato',finalizarContrato);
+router.put('/finalizarContrato/:cid',finalizarContrato);
 
 module.exports = router;

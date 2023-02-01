@@ -113,7 +113,7 @@ const buscarTrabajadores = async (req,res) => {
 
 const infoContratoT = async (req,res) => {
   try{
-    const {tid} = req.body;
+    const {tid} = req.params;
 
     const result = await pool.query('SELECT * FROM infoContratoT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);
@@ -225,7 +225,7 @@ const realizarPago = async (req,res) => {
 
 const finalizarContrato = async (req,res) => {
   try{
-    const {cid} = req.body;
+    const {cid} = req.params;
       
     const result = await pool.query('CALL finalizarContrato($1);',[cid]);
       res.json({message: 'El contrato ha finalizado'});

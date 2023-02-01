@@ -7,23 +7,30 @@ import DropDown from '../../components/Dropdown';
 import useFormData from '../../components/useFormData';
 import ButtonLoading from '../../components/ButtonLoading';
 import Input from '../../components/Input';
+import ButtonSeguir from '../../components/ButtonSeguir';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AccountContext } from '../../components/AccountContex';
 import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const ElegirLabor = () => {
   const { form, formData, updateFormData } = useFormData();
   const { user, setUser } = useContext(AccountContext);
   const [labores, setLabores] = useState([]);
+  const navigate = useNavigate();
 
-  console.log(user)
+  // console.log(user)
 
   useEffect(() => {
     loadLabores(user.id);
   }, []);
+
+  const handleClickSeguir = () => {
+    navigate('/dashboardT');
+  };
 
   const loadLabores = async (id) => {
     fetch(`http://localhost:8000/getLabores/${id}`, {
@@ -102,7 +109,7 @@ const ElegirLabor = () => {
           if (!data) return;
           toast.success('Puedes agregar otro labor si lo deseas');
           setLabores(
-            labores.filter((item) => item !== labores[formData.labor])
+            labores.filter((item) => item !== labores[formData.labor_])
           );
         });
     }
@@ -131,6 +138,7 @@ const ElegirLabor = () => {
           disabled={Object.keys(formData).length === 0}
           // loading={loadingMutationd}
         />
+        <ButtonSeguir text='Seguir' onClick={handleClickSeguir} />
       </form>
     </div>
   );

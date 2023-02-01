@@ -79,9 +79,12 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE PROCEDURE finalizarContrato(cid INTEGER)
 AS $$
 BEGIN
-  UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = cid;
+  IF (SELECT fecha_f FROM Contrato WHERE contrato_id = cid) IS NULL THEN
+    UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = cid;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- realizar pago

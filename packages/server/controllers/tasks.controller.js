@@ -139,7 +139,7 @@ const infoTransaccionT = async (req,res) => {
 
 const notificacionesT = async (req,res) => {
   try{
-    const {tid} = req.body;
+    const {tid} = req.params;
 
     const result = await pool.query('SELECT * FROM notificacionesT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);

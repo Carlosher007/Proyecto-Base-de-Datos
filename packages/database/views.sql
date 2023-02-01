@@ -1,4 +1,4 @@
-  CREATE VIEW infocontratot AS 
+  CREATE VIEW infoContratoT AS 
     SELECT C.contrato_id, C.ejerce_id, C.cliente_id, Tr.trabajador_id, C.calificacion, C.descripcion, C.fecha_i, C.fecha_f, C.transaccion_id ,
     CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (L.labor )::varchar AS nombre_labor, transaccion.fecha IS NOT NULL AS is_pagado, transaccion.monto
     FROM Contrato C

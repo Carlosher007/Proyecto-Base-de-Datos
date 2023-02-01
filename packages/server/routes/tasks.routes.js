@@ -34,7 +34,7 @@ router.get('/infoTransaccionT/:tid',infoTransaccionT);
 
 router.get('/notificacionesT/:tid',notificacionesT);
 
-router.get('/infoContratoC',infoContratoC)
+router.get('/infoContratoC/:tid',infoContratoC)
 
 router.get('/infoTransaccionC',infoTransaccionC);
 

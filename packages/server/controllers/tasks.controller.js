@@ -152,7 +152,7 @@ const notificacionesT = async (req,res) => {
 
 const infoContratoC = async (req,res) => {
   try{
-    const {cid} = req.body;
+    const {cid} = req.params;
 
     const result = await pool.query('SELECT * FROM infoContratoC WHERE $1 = cliente_id;',[cid]);
     res.json(result.rows);

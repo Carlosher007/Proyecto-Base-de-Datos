@@ -2,29 +2,50 @@
 
 import React from 'react';
 import CardList from '../../components/CardList';
-
-const misServicios = [
-  {
-    fechaInicio: '01/01/2022',
-    trabajador: 'Juan Perez',
-    labor: 'Limpieza de piscina',
-    calificacion: 4,
-    fechaFinalizado: '05/01/2022',
-    pagado: true,
-  },
-  {
-    fechaInicio: '02/01/2022',
-    trabajador: 'Maria Rodriguez',
-    labor: 'Jardinería',
-    calificacion: null,
-    fechaFinalizado: null,
-    pagado: false,
-  },
-];
-
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 const DashboardC = () => {
-  return <CardList data={misServicios} renderType='misServiciosC' />;
+  const { user, setUser } = useContext(AccountContext);
+
+  useEffect(() => {
+    loadContratos(user.id);
+  }, []);
+
+  const [contratos, setContratos] = useState([]);
+
+  const loadContratos = async (tid) => {
+    fetch(`http://localhost:8000/infoContratoC/${tid}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .catch((err) => {
+        toast.warning('Error al traer los contratos');
+        return;
+      })
+      .then((res) => {
+        if (!res || !res.ok || res.status >= 400) {
+          toast.warning('Error al traer los contratos');
+          return;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        if (data.length === 0) {
+          toast.warning('No tienes ningun contrato');
+        }
+        setContratos(data);
+      });
+  };
+
+  return <CardList data={contratos} renderType='misServiciosC' />;
 };
 
 export default DashboardC;

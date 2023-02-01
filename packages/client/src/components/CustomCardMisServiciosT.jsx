@@ -51,13 +51,14 @@ function CustomCardMisServiciosT(props) {
         <Text>Cliente asociado: {props.nombre_cliente}</Text>
         <Text>Labor: {props.nombre_labor}</Text>
         <Text>Descripcion: {props.descripcion}</Text>
+        <Text>Monto: {props.monto}</Text>
         <Text>
           Calificación:{' '}
           {props.calificacion === null
             ? 'No ha sido calificado'
             : props.calificacion}
         </Text>
-        <Text>Pagado: {props.isPagado ? 'Si' : 'No'}</Text>
+        <Text>Pagado: {props.is_pagado ? 'Si' : 'No'}</Text>
         {!showButton ? (
           <Text>Terminado: Ya ha terminado</Text>
         ) : (

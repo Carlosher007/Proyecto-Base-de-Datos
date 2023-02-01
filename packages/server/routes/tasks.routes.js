@@ -15,7 +15,8 @@ const {
   notificacionesC,
   calificarServicio,
   realizarPago,
-  finalizarContrato
+  finalizarContrato,
+  laboresDisponibles
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -45,5 +46,7 @@ router.put('/calificarServicio',calificarServicio);
 router.put('/realizarPago',realizarPago);
 
 router.put('/finalizarContrato/:cid',finalizarContrato);
+
+router.get('/laboresDisponibles',laboresDisponibles);
 
 module.exports = router;

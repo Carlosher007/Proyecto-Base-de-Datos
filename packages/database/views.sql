@@ -1,15 +1,15 @@
-  CREATE VIEW infoContratoT AS 
-    SELECT C.contrato_id, C.ejerce_id, C.cliente_id, Tr.trabajador_id, C.calificacion, C.descripcion, C.fecha_i, C.fecha_f, C.transaccion_id ,
-    CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (L.labor )::varchar AS nombre_labor, transaccion.fecha IS NOT NULL AS is_pagado, transaccion.monto
-    FROM Contrato C
-    JOIN Ejerce E ON C.ejerce_id = E.ejerce_id
-    JOIN Cliente Cli ON C.cliente_id = Cli.cliente_id
-    JOIN Trabajador Tr ON E.trabajador_id = Tr.trabajador_id
-    JOIN Labor L ON E.labor_id = L.labor_id
-    -- Join a transaccion para ver si esta pagado
-    JOIN Transaccion transaccion ON C.transaccion_id = transaccion.transaccion_id
-    JOIN Usuario usuario ON Cli.user_id = usuario.user_id
-  ;
+CREATE VIEW infoContratoT AS 
+  SELECT C.contrato_id, C.ejerce_id, C.cliente_id, Tr.trabajador_id, C.calificacion, C.descripcion, C.fecha_i, C.fecha_f, C.transaccion_id ,
+  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (L.labor )::varchar AS nombre_labor, transaccion.fecha IS NOT NULL AS is_pagado, transaccion.monto
+  FROM Contrato C
+  JOIN Ejerce E ON C.ejerce_id = E.ejerce_id
+  JOIN Cliente Cli ON C.cliente_id = Cli.cliente_id
+  JOIN Trabajador Tr ON E.trabajador_id = Tr.trabajador_id
+  JOIN Labor L ON E.labor_id = L.labor_id
+  -- Join a transaccion para ver si esta pagado
+  JOIN Transaccion transaccion ON C.transaccion_id = transaccion.transaccion_id
+  JOIN Usuario usuario ON Cli.user_id = usuario.user_id
+;
 
 CREATE VIEW infoTransaccionT AS
   SELECT 
@@ -72,3 +72,10 @@ CREATE VIEW notificacionesC AS
   JOIN Usuario U ON N.user_id = U.user_id
   JOIN Cliente C ON U.user_id = C.user_id
 ;
+
+CREATE VIEW laboresDisponibles AS
+  SELECT labor FROM Labor L
+  JOIN Ejerce E ON L.labor_id = E.labor_id
+  JOIN Trabajador T ON T.trabajador_id = E.trabajador_id T.disponible = TRUE
+  GROUP BY labor
+  ;

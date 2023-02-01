@@ -243,6 +243,16 @@ const finalizarContrato = async (req,res) => {
   }
 }
 
+const laboresDisponibles = async (req,res) => {
+  try{
+    const result = await pool.query('SELECT * FROM laboresDisponibles;');
+    res.json(result.rows);
+  } catch(error){
+    console.log(error);
+    res.json({ error: error });
+  }
+}
+
 module.exports = {
   nuevoEjerce,
   getLabores,
@@ -256,5 +266,6 @@ module.exports = {
   notificacionesC,
   calificarServicio,
   realizarPago,
-  finalizarContrato
+  finalizarContrato,
+  laboresDisponibles
 };

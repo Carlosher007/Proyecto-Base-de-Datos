@@ -17,8 +17,8 @@ const HistorialPagosT = () => {
 
   const [pagos, setPagos] = useState([]);
 
-  const loadContratos = async (cid) => {
-    fetch(`http://localhost:8000/infoTransaccionT/${cid}`, {
+  const loadContratos = async (tid) => {
+    fetch(`http://localhost:8000/infoTransaccionT/${tid}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -42,7 +42,6 @@ const HistorialPagosT = () => {
           toast.warning('No tienes ningun pago');
         }
         setPagos(data);
-        console.log(data)
       });
   };
 

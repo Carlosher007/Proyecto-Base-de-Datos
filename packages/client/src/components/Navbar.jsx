@@ -52,7 +52,7 @@ function Navbar({ condition }) {
     return (
       <nav ref={navRef}>
         <a href='/buscarServicioC'>Buscar servicios</a>
-        <a href='/notificacionT'>Notificaciones</a>
+        <a href='/notificacionC'>Notificaciones</a>
         <a href='/dashboard'>Mis servicios</a>
         <a href='/historialPagosC'>Historial de pagos</a>
         <button className='nav-btn nav-close-btn' onClick={showNavbar}>

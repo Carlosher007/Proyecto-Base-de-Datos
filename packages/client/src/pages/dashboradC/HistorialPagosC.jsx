@@ -2,24 +2,50 @@
 
 import React from 'react';
 import CardList from '../../components/CardList';
+import { AccountContext } from '../../components/AccountContex';
+import { useContext } from 'react';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
-const pagos = [
-  {
-    fecha: '01/01/2021',
-    monto: '$100',
-    nombre: 'Juan',
-    cuenta: 'xxxx-xxxx-xxxx-1234',
-  },
-  {
-    fecha: '01/02/2021',
-    monto: '$150',
-    nombre: 'Maria',
-    cuenta: 'xxxx-xxxx-xxxx-5678',
-  },
-  // más pagos
-];
 
 const HistorialPagosC = () => {
+
+    const { user, setUser } = useContext(AccountContext);
+
+    useEffect(() => {
+      loadContratos(user.id);
+    }, []);
+
+    const [pagos, setPagos] = useState([]);
+
+    const loadContratos = async (cid) => {
+      fetch(`http://localhost:8000/infoTransaccionC/${cid}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .catch((err) => {
+          toast.warning('Error al traer los pagos');
+          return;
+        })
+        .then((res) => {
+          if (!res || !res.ok || res.status >= 400) {
+            toast.warning('Error al traer los pagos');
+            return;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (!data) return;
+          if (data.length === 0) {
+            toast.warning('No tienes ningun pago');
+          }
+          setPagos(data);
+        });
+    };
   return <CardList data={pagos} renderType='historialPagosC' />;
 };
 

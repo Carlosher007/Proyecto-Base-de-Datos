@@ -126,7 +126,7 @@ const infoContratoT = async (req,res) => {
 
 const infoTransaccionT = async (req,res) => {
   try{
-    const {tid} = req.body;
+    const {tid} = req.params;
 
     const result = await pool.query('SELECT * FROM infoTransaccionT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);

@@ -30,7 +30,7 @@ router.get('/buscarTrabajadores', buscarTrabajadores);
 
 router.get('/infoContratoT/:tid',infoContratoT)
 
-router.get('/infoTransaccionT',infoTransaccionT);
+router.get('/infoTransaccionT/:tid',infoTransaccionT);
 
 router.get('/notificacionesT',notificacionesT);
 

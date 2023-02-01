@@ -26,7 +26,7 @@ router.get('/getLabores/:id',getLabores);
 
 router.post('/nuevoContrato',nuevoContrato);
 
-router.get('/buscarTrabajadores', buscarTrabajadores);
+router.post('/buscarTrabajadores/:cid', buscarTrabajadores);
 
 router.get('/infoContratoT/:tid',infoContratoT)
 

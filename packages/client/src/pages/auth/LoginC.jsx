@@ -30,6 +30,7 @@ const LoginC = () => {
       onSubmit={(values, actions) => {
         const vals = { ...values };
         actions.resetForm();
+
         fetch('http://localhost:8000/auth/loginC', {
           method: 'POST',
           credentials: 'include',

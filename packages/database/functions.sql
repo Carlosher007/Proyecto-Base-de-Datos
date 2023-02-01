@@ -82,38 +82,58 @@ $$ LANGUAGE plpgsql;
 
 
 -- Tabla con los servicios disponibles segun criterio.
-CREATE OR REPLACE FUNCTION buscar_trabajadores(labor_id_in INT, latitud_in FLOAT, longitud_in FLOAT,criterio VARCHAR(255)
-) RETURNS TABLE(trabajador_id INTEGER,nombre VARCHAR(255),apellido VARCHAR(255),ejerce_id INTEGER,calificacion FLOAT,precio FLOAT,tipo_trabajo VARCHAR(255), descripcion VARCHAR(255), distancia FLOAT) 
-AS $$
-BEGIN
-  IF criterio = 'distancia' THEN
-    RETURN QUERY
-    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
-    FROM Ejerce e
-    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
-    JOIN Usuario u ON u.user_id = t.user_id
-    JOIN Coordenada c ON c.coor_id = u.coor_id
-    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
-    ORDER BY distancia;
-  ELSIF criterio = 'precio' THEN
-    RETURN QUERY
-    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
-    FROM Ejerce e
-    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
-    JOIN Usuario u ON u.user_id = t.user_id
-    JOIN Coordenada c ON c.coor_id = u.coor_id
-    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
-    ORDER BY precio;
-  ELSIF criterio = 'calificacion' THEN
-    RETURN QUERY
-    SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia
-    FROM Ejerce e
-    JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
-    JOIN Usuario u ON u.user_id = t.user_id
-    JOIN Coordenada c ON c.coor_id = u.coor_id
-    WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
-    ORDER BY calificacion;
-  ELSE RAISE NOTICE 'criterio no exite';
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
+    CREATE OR REPLACE FUNCTION buscar_trabajadores(labor_id_in INT, latitud_in FLOAT, longitud_in FLOAT,criterio VARCHAR(255)
+    ) RETURNS TABLE(
+    trabajador_id INTEGER
+    ,nombre VARCHAR(255)
+    ,apellido VARCHAR(255)
+    ,ejerce_id INTEGER
+    ,calificacion FLOAT
+    ,precio FLOAT
+    ,tipo_trabajo VARCHAR(255)
+    , descripcion VARCHAR(255)
+    , distancia FLOAT
+    , criterio_ VARCHAR(255)) 
+    AS $$
+    BEGIN
+      IF criterio = 'distancia' THEN
+        RETURN QUERY
+        SELECT 
+        t.trabajador_id, 
+        u.nombre, 
+        u.apellido,
+        e.ejerce_id,
+        t.calificacion,
+        e.precio,
+        cast(e.tipo_trabajo as varchar), 
+        e.descripcion, 
+        earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia,
+        criterio AS criterio_   
+        FROM Ejerce e
+        JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+        JOIN Usuario u ON u.user_id = t.user_id
+        JOIN Coordenada c ON c.coor_id = u.coor_id
+        WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+        ORDER BY distancia;
+      ELSIF criterio = 'precio' THEN
+        RETURN QUERY
+        SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia, criterio AS criterio_   
+        FROM Ejerce e
+        JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+        JOIN Usuario u ON u.user_id = t.user_id
+        JOIN Coordenada c ON c.coor_id = u.coor_id
+        WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+        ORDER BY precio;
+      ELSIF criterio = 'calificacion' THEN
+        RETURN QUERY
+        SELECT t.trabajador_id, u.nombre, u.apellido, e.ejerce_id, t.calificacion, e.precio, cast(e.tipo_trabajo as varchar), e.descripcion, earth_distance(ll_to_earth(latitud_in, longitud_in), ll_to_earth(c.latitud, c.longitud)) AS distancia, criterio AS criterio_   
+        FROM Ejerce e
+        JOIN Trabajador t ON e.trabajador_id = t.trabajador_id
+        JOIN Usuario u ON u.user_id = t.user_id
+        JOIN Coordenada c ON c.coor_id = u.coor_id
+        WHERE (e.labor_id = labor_id_in OR (labor_id_in = 0 OR labor_id_in IS NULL)) AND t.disponible = true
+        ORDER BY calificacion;
+      ELSE RAISE NOTICE 'criterio no exite';
+      END IF;
+    END;
+  $$ LANGUAGE plpgsql;

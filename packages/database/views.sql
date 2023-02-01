@@ -76,6 +76,6 @@ CREATE VIEW notificacionesC AS
 CREATE VIEW laboresDisponibles AS
   SELECT labor FROM Labor L
   JOIN Ejerce E ON L.labor_id = E.labor_id
-  JOIN Trabajador T ON T.trabajador_id = E.trabajador_id T.disponible = TRUE
+  JOIN Trabajador T ON T.trabajador_id = E.trabajador_id AND T.disponible = TRUE
   GROUP BY labor
   ;

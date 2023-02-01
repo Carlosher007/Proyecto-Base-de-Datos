@@ -47,7 +47,7 @@ function CardList(props) {
       <div className='grid-container'>
         {props.data.map((item, index) => (
           <div className='grid-item' key={index}>
-            <CustomCardBuscarServicioC {...item} />
+            <CustomCardBuscarServicioC {...item} criterio={props.criterio} />
           </div>
         ))}
       </div>

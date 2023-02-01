@@ -11,20 +11,45 @@ import { useState } from 'react';
 const BuscarServiciosC = () => {
   const { user, setUser } = useContext(AccountContext);
   const [servicios, setServicios] = useState([]);
-  const [labores, setSetLabores] = useState([]);
+  const [labores, setLabores] = useState([]);
   const [selectedLabor, setSelectedLabor] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('distancia');
+  const [selectedFilter, setSelectedFilter] = useState('');
+  const [showCardList, setShowCardList] = useState(false);
 
   useEffect(() => {
     loadLabores();
   }, []);
 
   const loadLabores = async () => {
-    setSetLabores(['Carpinteria', 'Electricidad', 'Plomeria']);
+    fetch(`http://localhost:8000/laboresDisponibles`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .catch((err) => {
+        toast.warning('Error al traer los labores');
+        return;
+      })
+      .then((res) => {
+        if (!res || !res.ok || res.status >= 400) {
+          toast.warning('Error al traer los labores');
+          return;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        if (data.length === 0) {
+          toast.warning('No hay labores');
+        }
+        const laboresArray = data.map((item) => item.labor);
+        setLabores(laboresArray); 
+      });
   };
 
   const loadContratos = async (cid) => {
-
     fetch(`http://localhost:8000/buscarTrabajadores/${cid}`, {
       method: 'POST',
       credentials: 'include',
@@ -32,8 +57,8 @@ const BuscarServiciosC = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-      labor: selectedLabor,
-      filter: selectedFilter,
+        labor: selectedLabor,
+        filter: selectedFilter,
       }),
     })
       .catch((err) => {
@@ -56,6 +81,7 @@ const BuscarServiciosC = () => {
         }
         //Ponemos los labores en setServicios
         setServicios(data);
+        setShowCardList(true);
       });
   };
 
@@ -65,7 +91,7 @@ const BuscarServiciosC = () => {
       toast.error('Selecciona una labor y un filtro para continuar.');
       return;
     }
-
+    setShowCardList(false);
     loadContratos(user.id);
   };
 
@@ -122,8 +148,12 @@ const BuscarServiciosC = () => {
         </div>
       </form>
       <div className='mt-4'>
-        {servicios.length > 0 && (
-          <CardList data={servicios} renderType='buscarServicioC' />
+        {showCardList && (
+          <CardList
+            data={servicios}
+            renderType='buscarServicioC'
+            criterio={selectedFilter}
+          />
         )}
       </div>
     </>

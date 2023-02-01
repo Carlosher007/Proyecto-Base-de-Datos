@@ -22,6 +22,7 @@ import { AccountContext } from '../components/AccountContex';
 import { useContext } from 'react';
 import { Text } from '@chakra-ui/react';
 import PublicRoutes from './PublicRoutes';
+import Contratar from '../pages/dashboradC/Contratar';
 
 const Views = () => {
   const { user } = useContext(AccountContext);
@@ -47,6 +48,7 @@ const Views = () => {
         <Route path='/historialPagosT' element={<HistorialPagosT />} />
         <Route path='/elegirLaborT' element={<ElegirLabor />} />
         <Route path='/notificacionT' element={<NotificacionT />} />
+        <Route path='/contratar/:eid' element={<Contratar />} />
       </Route>
 
       <Route path='/usuarioInvalido' element={<UsuarioInvalido />} />

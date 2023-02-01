@@ -113,9 +113,9 @@ const buscarTrabajadores = async (req,res) => {
 
 const infoContratoT = async (req,res) => {
   try{
-    const {p_trabajador_id} = req.body;
+    const {tid} = req.body;
 
-    const result = await pool.query('SELECT * FROM infoContratoTrabajador($1);',[p_trabajador_id]);
+    const result = await pool.query('SELECT * FROM infoContratoT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);
 
   } catch(error){
@@ -126,9 +126,9 @@ const infoContratoT = async (req,res) => {
 
 const infoTransaccionT = async (req,res) => {
   try{
-    const {p_trabajador_id} = req.body;
+    const {tid} = req.body;
 
-    const result = await pool.query('SELECT * FROM infoTransaccionTrabajador($1);',[p_trabajador_id]);
+    const result = await pool.query('SELECT * FROM infoTransaccionT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);
 
   } catch(error){
@@ -139,9 +139,9 @@ const infoTransaccionT = async (req,res) => {
 
 const notificacionesT = async (req,res) => {
   try{
-    const {p_trabajador_id} = req.body;
+    const {tid} = req.body;
 
-    const result = await pool.query('SELECT * FROM notificacionesT($1);',[p_trabajador_id]);
+    const result = await pool.query('SELECT * FROM notificacionesT WHERE $1 = trabajador_id;',[tid]);
     res.json(result.rows);
 
   } catch(error){
@@ -152,9 +152,9 @@ const notificacionesT = async (req,res) => {
 
 const infoContratoC = async (req,res) => {
   try{
-    const {p_cliente_id} = req.body;
+    const {cid} = req.body;
 
-    const result = await pool.query('SELECT * FROM infoContratoCliente($1);',[p_cliente_id]);
+    const result = await pool.query('SELECT * FROM infoContratoC WHERE $1 = cliente_id;',[cid]);
     res.json(result.rows);
 
   } catch(error){
@@ -165,9 +165,9 @@ const infoContratoC = async (req,res) => {
 
 const infoTransaccionC = async (req,res) => {
   try{
-    const {p_cliente_id} = req.body;
+    const {cid} = req.body;
 
-    const result = await pool.query('SELECT * FROM infoTransaccionCliente($1);',[p_cliente_id]);
+    const result = await pool.query('SELECT * FROM infoTransaccionC WHERE $1 = cliente_id;',[cid]);
     res.json(result.rows);
 
   } catch(error){
@@ -178,9 +178,9 @@ const infoTransaccionC = async (req,res) => {
 
 const notificacionesC = async (req,res) => {
   try{
-    const {p_cliente_id} = req.body;
+    const {cid} = req.body;
 
-    const result = await pool.query('SELECT * FROM notificacionesC($1);',[p_cliente_id]);
+    const result = await pool.query('SELECT * FROM notificacionesC WHERE $1 = cliente_id;',[cid]);
     res.json(result.rows);
 
   } catch(error){

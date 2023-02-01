@@ -1,5 +1,6 @@
 /** @format */
 
+const e = require('express');
 const { json } = require('express');
 const pool = require('../db'); //pool es la conexion a la base de datos
 
@@ -50,24 +51,31 @@ const getLabores = async (req, res) => {
 
 const nuevoContrato = async (req,res) => {
   try{
-    const {ejerce_id,cliente_id,descripcion} = req.body;
+    const {ejerce_id,cliente_id,cantidad_trabajo,descripcion} = req.body;
     const result = await pool.query('SELECT disponible FROM Ejerce e JOIN Trabajador t ON e.trabajador_id = t.trabajador_id WHERE e.ejerce_id = $1 LIMIT 1',
     [ejerce_id]);
     
-    if(result.rows[0].disponible){
+    if(cantidad_trabajo <= 0){
+      res.status(503).json({message: "No se aceptan cantidades nulas ni negativas"});
+    }else{
+      if(result.rows[0].disponible){
       console.log('Trabajador disponible');
       
-      const nuevaTransaccion = await pool.query('INSERT INTO Transaccion(fecha,monto) VALUES(NULL,NULL)');
+      const precio = (await pool.query('SELECT precio FROM Ejerce WHERE $1 = ejerce_id',[ejerce_id])).rows[0].precio
+      const monto = precio * cantidad_trabajo
+
+      const nuevaTransaccion = await pool.query('INSERT INTO Transaccion(fecha,monto) VALUES(NULL,$1)',[monto]);
       
       const transaccion_id = await pool.query('SELECT transaccion_id FROM Transaccion ORDER BY transaccion_id DESC LIMIT 1');
 
       console.log(transaccion_id.rows[0].transaccion_id);
 
-      const crearContrato = await pool.query('INSERT INTO Contrato(ejerce_id,cliente_id,calificacion,descripcion,fecha_i,fecha_f,transaccion_id) VALUES ($1,$2,NULL,$3,NOW(),NULL,$4)',
-      [ejerce_id,cliente_id,descripcion,transaccion_id.rows[0].transaccion_id]);
+      const crearContrato = await pool.query('INSERT INTO Contrato(ejerce_id,cliente_id,cantidad_trabajo,calificacion,descripcion,fecha_i,fecha_f,transaccion_id) VALUES ($1,$2,$3,NULL,$4,NOW(),NULL,$5)',
+      [ejerce_id,cliente_id,cantidad_trabajo,descripcion,transaccion_id.rows[0].transaccion_id]);
       res.json({message: 'Nuevo contrato creado'});
-    }else {
-      res.status(503).json({message: "Trabajador no disponible"});
+      }else {
+        res.status(503).json({message: "Trabajador no disponible"});
+      }
     }
   } catch(error){
     console.log(error);
@@ -200,10 +208,10 @@ const calificarServicio = async (req,res) => {
 
 const realizarPago = async (req,res) => {
   try{
-    const {cid , pago } = req.body;
+    const {cid} = req.body;
 
     if(pago >= 0){
-      const result = await pool.query('CALL realizarPago($1,$2);',[cid,pago]);
+      const result = await pool.query('CALL realizarPago($1);',[cid]);
 
       res.json({message: 'Se ha realizado un pago'});
     }else{

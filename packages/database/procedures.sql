@@ -85,8 +85,8 @@ $$ LANGUAGE plpgsql;
 
 
 -- realizar pago
-CREATE OR REPLACE PROCEDURE realizarPago(cid INTEGER, pago FLOAT) AS $$
+CREATE OR REPLACE PROCEDURE realizarPago(cid INTEGER) AS $$
     BEGIN
-        UPDATE Transaccion SET monto = pago, fecha = NOW() FROM  Contrato WHERE Contrato.transaccion_id = Transaccion.transaccion_id AND Contrato.contrato_id = cid;    
+        UPDATE Transaccion SET fecha = NOW() FROM  Contrato WHERE Contrato.transaccion_id = Transaccion.transaccion_id AND Contrato.contrato_id = cid;    
     END;
 $$ LANGUAGE plpgsql;

@@ -120,11 +120,11 @@ $$ LANGUAGE plpgsql;
 
 -- Tabla con informacion de los contratos que tiene el trabajador 
 CREATE OR REPLACE FUNCTION infoContratoTrabajador(p_trabajador_id INTEGER)
-RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_cliente VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
+RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, cliente_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_cliente VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN, monto FLOAT) AS $$
 BEGIN
   RETURN QUERY
   SELECT contrato.contrato_id, contrato.ejerce_id, contrato.cliente_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
-  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (labor.labor )::varchar AS nombre_labor, transaccion.monto IS NOT NULL AS is_pagado
+  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_cliente, (labor.labor )::varchar AS nombre_labor, transaccion.fecha IS NOT NULL AS is_pagado, transaccion.monto
   FROM Contrato contrato
   JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
   JOIN Cliente cliente ON contrato.cliente_id = cliente.cliente_id
@@ -176,11 +176,11 @@ $$ LANGUAGE plpgsql;
 
 -- Tabla con informacion de los contratos que tiene el trabajador 
 CREATE OR REPLACE FUNCTION infoContratoCliente(p_cliente_id INTEGER)
-RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_trabajador VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN) AS $$
+RETURNS TABLE(contrato_id INTEGER, ejerce_id INTEGER, calificacion FLOAT, descripcion VARCHAR(255), fecha_i DATE, fecha_f DATE, transaccion_id INTEGER, nombre_trabajador VARCHAR(255), nombre_labor VARCHAR(255), is_pagado BOOLEAN, monto FLOAT) AS $$
 BEGIN
   RETURN QUERY
   SELECT contrato.contrato_id, contrato.ejerce_id, contrato.calificacion, contrato.descripcion, contrato.fecha_i, contrato.fecha_f, contrato.transaccion_id ,
-  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_trabajador, (labor.labor )::varchar AS nombre_labor, transaccion.monto IS NOT NULL AS is_pagado
+  CONCAT(usuario.nombre,' ',usuario.apellido)::varchar AS nombre_trabajador, (labor.labor )::varchar AS nombre_labor, transaccion.fecha IS NOT NULL AS is_pagado, transaccion.monto
   FROM Contrato contrato
   JOIN Ejerce ejerce ON contrato.ejerce_id = ejerce.ejerce_id
   JOIN Cliente cliente ON contrato.cliente_id = cliente.cliente_id

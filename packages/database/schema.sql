@@ -78,7 +78,7 @@ CREATE TABLE Notificacion (
 CREATE TABLE Transaccion (
     transaccion_id SERIAL PRIMARY KEY,
     fecha DATE,
-    monto FLOAT
+    monto FLOAT NOT NULL
 );
 
 CREATE TYPE tipo_trabajo AS ENUM ('precio_por_hora', 'unidad_de_trabajo');

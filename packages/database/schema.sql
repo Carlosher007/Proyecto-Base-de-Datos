@@ -97,6 +97,7 @@ CREATE TABLE Contrato (
     contrato_id SERIAL PRIMARY KEY,
     ejerce_id INTEGER REFERENCES Ejerce(ejerce_id) NOT NULL,
     cliente_id INTEGER REFERENCES Cliente(cliente_id) NOT NULL,
+    cantidad_trabajo INTEGER NOT NULL,
     calificacion FLOAT ,
     descripcion VARCHAR(255),
     fecha_i DATE NOT NULL,

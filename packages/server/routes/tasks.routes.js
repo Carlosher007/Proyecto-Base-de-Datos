@@ -12,7 +12,10 @@ const {
   notificacionesT,
   infoContratoC,
   infoTransaccionC,
-  notificacionesC
+  notificacionesC,
+  calificarServicio,
+  realizarPago,
+  finalizarContrato
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -36,5 +39,11 @@ router.get('/infoContratoC',infoContratoC)
 router.get('/infoTransaccionC',infoTransaccionC);
 
 router.get('/notificacionesC',notificacionesC);
+
+router.put('/calificarServicio',calificarServicio);
+
+router.put('/realizarPago',realizarPago);
+
+router.put('/finalizarContrato',finalizarContrato);
 
 module.exports = router;

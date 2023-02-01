@@ -69,14 +69,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Calificar un servicio
-CREATE OR REPLACE PROCEDURE actualizar_calificacion(p_contrato_id INTEGER, p_calificacion FLOAT) AS $$
+CREATE OR REPLACE PROCEDURE calificarServicio(p_contrato_id INTEGER, p_calificacion FLOAT) AS $$
 BEGIN
   UPDATE Contrato SET calificacion = p_calificacion WHERE contrato_id = p_contrato_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- fecha de finalizacion de un contrato.
-CREATE OR REPLACE PROCEDURE actualizar_fecha_f(cid INTEGER)
+CREATE OR REPLACE PROCEDURE finalizarContrato(cid INTEGER)
 AS $$
 BEGIN
   UPDATE Contrato SET fecha_f = NOW() WHERE contrato_id = cid;
@@ -87,6 +87,6 @@ $$ LANGUAGE plpgsql;
 -- realizar pago
 CREATE OR REPLACE PROCEDURE realizarPago(cid INTEGER, pago FLOAT) AS $$
     BEGIN
-        UPDATE Transaccion SET monto = pago, fecha = NOW() FROM Transaccion T JOIN Contrato C ON T.transaccion_id = C.transaccion_id;   
+        UPDATE Transaccion SET monto = pago, fecha = NOW() FROM  Contrato WHERE Contrato.transaccion_id = Transaccion.transaccion_id AND Contrato.contrato_id = cid;    
     END;
 $$ LANGUAGE plpgsql;

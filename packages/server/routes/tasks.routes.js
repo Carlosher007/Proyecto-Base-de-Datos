@@ -38,7 +38,7 @@ router.get('/infoContratoC/:tid',infoContratoC)
 
 router.get('/infoTransaccionC',infoTransaccionC);
 
-router.get('/notificacionesC',notificacionesC);
+router.get('/notificacionesC/:cid',notificacionesC);
 
 router.put('/calificarServicio',calificarServicio);
 

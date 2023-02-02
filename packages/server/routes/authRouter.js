@@ -40,7 +40,6 @@ router
 router.post(
   '/registroC',
   controller.multerC,
-  validateFormRegisterC,
   attempRegisterC
 );
 
@@ -48,6 +47,6 @@ router.get('/logout', attemptLogout);
 
 router.post('/upload', controller.multerT, controller.uploadFile);
 
-router.post('/registroT', validateFormRegisterT,controller.multerT, attempRegisterT);
+router.post('/registroT',controller.multerT, attempRegisterT);
 
 module.exports = router;

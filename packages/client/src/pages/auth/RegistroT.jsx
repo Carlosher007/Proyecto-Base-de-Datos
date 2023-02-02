@@ -82,12 +82,15 @@ const RegistroT = () => {
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
 
-        if (!isNaN(vals.celular) || vals.celular>0) {
+        const isValidNumber = /^\d+$/.test(vals.celular);
+        const isValidNumber2 = /^\d+$/.test(vals.cuenta);
+
+        if (isNaN(vals.celular) || !isValidNumber) {
           toast.warning('El celular debe ser un número');
           return;
         }
-        //lo mismo para cuenta
-        if (!isNaN(vals.cuenta) || vals.cuenta>0) {
+
+        if (isNaN(vals.cuenta) || !isValidNumber2) {
           toast.warning('La cuenta debe ser un número');
           return;
         }

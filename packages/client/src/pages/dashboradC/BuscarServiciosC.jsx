@@ -42,7 +42,7 @@ const BuscarServiciosC = () => {
       .then((data) => {
         if (!data) return;
         if (data.length === 0) {
-          toast.warning('No hay labores');
+          toast.warning('Es posible que no haya labores o debas elegir uno');
         }
         const laboresArray = data.map((item) => item.labor);
         setLabores(laboresArray); 

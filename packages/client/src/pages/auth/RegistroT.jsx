@@ -112,6 +112,7 @@ const RegistroT = () => {
           })
           .then((data) => {
             if (!data) return;
+            console.log(data);
             setUser({ ...data });
             if (data.status) {
               setError(data.status);
@@ -191,6 +192,7 @@ const RegistroT = () => {
                   type='file'
                   className='p-2 border rounded'
                   onChange={handleChange}
+                  accept="image/*"
                 />
               </div>
               <div className='mb-5'>
@@ -199,6 +201,7 @@ const RegistroT = () => {
                   type='file'
                   className='p-2 border rounded'
                   onChange={handleChange2}
+                  accept="image/*"
                 />
               </div>
             </form>

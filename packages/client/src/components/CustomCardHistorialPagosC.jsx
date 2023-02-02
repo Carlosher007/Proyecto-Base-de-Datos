@@ -21,7 +21,6 @@ function CustomCardHistorialPagosC(props) {
       <CardBody>
         <Text>monto: {props.monto_transaccion}</Text>
         <Text>Cuenta que recibio el pago: {props.cuenta_recibio}</Text>
-        <Text>Cuenta que envio el pago: {props.cuenta_envio}</Text>
         <Text>Labor realizada: {props.labor_}</Text>
       </CardBody>
     </Card>

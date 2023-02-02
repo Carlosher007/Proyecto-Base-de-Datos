@@ -55,23 +55,11 @@ function CustomCardBuscarServicioC(props) {
                 : 'Por unidad de trabajo'}
             </Text>
             <Text>Precio: {props.precio}</Text>
-            <Text>
-              Modalidad de cobro:{' '}
-              {props.tipo_trabajo === 'precio_por_hora'
-                ? 'Por hora'
-                : 'Por unidad de trabajo'}
-            </Text>
             {props.descipcion && <Text>Descripcion: {props.descipcion}</Text>}
           </>
         )}
         {criterio === 'precio' && (
           <>
-            <Text>
-              Modalidad de cobro:{' '}
-              {props.tipo_trabajo === 'precio_por_hora'
-                ? 'Por hora'
-                : 'Por unidad de trabajo'}
-            </Text>
             <Text>Precio: {props.precio}</Text>
             <Text>Distancia: {props.distancia}</Text>
             <Text>
@@ -98,12 +86,6 @@ function CustomCardBuscarServicioC(props) {
                 : props.calificacion}
             </Text>
             <Text>Distancia: {props.distancia}</Text>
-            <Text>
-              Modalidad de cobro:{' '}
-              {props.tipo_trabajo === 'precio_por_hora'
-                ? 'Por hora'
-                : 'Por unidad de trabajo'}
-            </Text>
             <Text>Precio: {props.precio}</Text>
             <Text>
               Modalidad de cobro:{' '}

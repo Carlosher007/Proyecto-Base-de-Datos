@@ -28,13 +28,13 @@ function CustomCardContrato(props) {
 
   const handleClickContratar = async (e) => {
     e.preventDefault();
-    console.log("se contrato")
-     if (isNaN(formData.cantidad_trabajo) || formData.cantidad_trabajo <= 0) {
-       toast.error('La cantidad de trabajo debe ser un número positivo');
-       return;
-     } 
-     const cantidad_trabajo = parseFloat(formData.cantidad_trabajo);
-     const descripcion = formData.descripcion;
+    console.log('se contrato');
+    if (isNaN(formData.cantidad_trabajo) || formData.cantidad_trabajo <= 0) {
+      toast.error('La cantidad de trabajo debe ser un número positivo');
+      return;
+    }
+    const cantidad_trabajo = parseFloat(formData.cantidad_trabajo);
+    const descripcion = formData.descripcion;
 
     fetch('http://localhost:8000/nuevoContrato', {
       method: 'POST',
@@ -66,7 +66,7 @@ function CustomCardContrato(props) {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>Labor: {props.labor}</Heading>
       </CardHeader>
@@ -88,9 +88,21 @@ function CustomCardContrato(props) {
         {/* espaciado */}
         <br />
         <br />
-        <form ref={form} onChange={updateFormData} onSubmit={handleClickContratar}>
-          <Input label='Cantidad de trabajo por modalidad de cobro' name='cantidad_trabajo' required={true} />
-          <Input label='Descripcion que desea para el trabajador' name='descripcion' required={false} />
+        <form
+          ref={form}
+          onChange={updateFormData}
+          onSubmit={handleClickContratar}
+        >
+          <Input
+            label='Cantidad de trabajo por modalidad de cobro'
+            name='cantidad_trabajo'
+            required={true}
+          />
+          <Input
+            label='Descripcion que desea para el trabajador'
+            name='descripcion'
+            required={false}
+          />
           <ButtonLoading
             text='Confirmar'
             disabled={Object.keys(formData).length === 0}

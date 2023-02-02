@@ -36,7 +36,7 @@ router.get('/infoTransaccionT/:tid',infoTransaccionT);
 
 router.get('/notificacionesT/:tid',notificacionesT);
 
-router.get('/infoContratoC/:tid',infoContratoC)
+router.get('/infoContratoC/:cid',infoContratoC)
 
 router.get('/infoTransaccionC/:cid',infoTransaccionC);
 
@@ -44,7 +44,7 @@ router.get('/notificacionesC/:cid',notificacionesC);
 
 router.put('/calificarServicio',calificarServicio);
 
-router.put('/realizarPago',realizarPago);
+router.put('/realizarPago/:cid',realizarPago);
 
 router.put('/finalizarContrato/:cid',finalizarContrato);
 

@@ -162,6 +162,8 @@ const infoContratoC = async (req,res) => {
   try{
     const {cid} = req.params;
 
+    console.log(cid)
+
     const result = await pool.query('SELECT * FROM infoContratoC WHERE $1 = cliente_id;',[cid]);
     res.json(result.rows);
 
@@ -200,6 +202,8 @@ const notificacionesC = async (req,res) => {
 const calificarServicio = async (req,res) => {
   try{
     const {p_contrato_id , p_calificacion } = req.body;
+    console.log(p_contrato_id)
+    console.log(p_calificacion)
 
     if(p_calificacion <= 5.0 && p_calificacion >= 0){
       const result = await pool.query('CALL calificarServicio($1,$2);',[p_contrato_id,p_calificacion]);
@@ -214,17 +218,18 @@ const calificarServicio = async (req,res) => {
   }
 }
 
+// /realizarpago
 const realizarPago = async (req,res) => {
   try{
-    const {cid} = req.body;
+    const {cid} = req.params;
 
-    if(pago >= 0){
+    // if(pago >= 0){
       const result = await pool.query('CALL realizarPago($1);',[cid]);
 
       res.json({message: 'Se ha realizado un pago'});
-    }else{
-      res.status(503).json({message: 'no se adminten pagos con numero negativos'});
-    }
+    // }else{
+      // res.status(503).json({message: 'no se adminten pagos con numero negativos'});
+    // }
   } catch(error){
     console.log(error);
     res.json({ error: error });

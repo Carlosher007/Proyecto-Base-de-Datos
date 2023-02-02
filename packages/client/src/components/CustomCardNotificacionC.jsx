@@ -12,7 +12,7 @@ import {
 
 function CustomCardNotificacionC(props) {
   return (
-    <Card style={{ width: '200px' }}>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>Fecha: {props.fecha.split('T')[0]}</Heading>
       </CardHeader>

@@ -53,7 +53,7 @@ function Navbar({ condition }) {
       <nav ref={navRef}>
         <a href='/buscarServicioC'>Buscar servicios</a>
         <a href='/notificacionC'>Notificaciones</a>
-        <a href='/dashboard'>Mis servicios</a>
+        <a href='/dashboardC'>Mis servicios</a>
         <a href='/historialPagosC'>Historial de pagos</a>
         <button className='nav-btn nav-close-btn' onClick={showNavbar}>
           <FaTimes />

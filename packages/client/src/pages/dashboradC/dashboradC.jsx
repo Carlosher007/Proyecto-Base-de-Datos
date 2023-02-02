@@ -17,8 +17,8 @@ const DashboardC = () => {
 
   const [contratos, setContratos] = useState([]);
 
-  const loadContratos = async (tid) => {
-    fetch(`http://localhost:8000/infoContratoC/${tid}`, {
+  const loadContratos = async (cid) => {
+    fetch(`http://localhost:8000/infoContratoC/${cid}`, {
       method: 'GET',
       credentials: 'include',
       headers: {

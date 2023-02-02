@@ -16,7 +16,6 @@ import { useEffect } from 'react';
 import ButtonSeguir from './ButtonSeguir';
 import { useNavigate } from 'react-router';
 
-
 function CustomCardBuscarServicioC(props) {
   const [criterio, setCriterio] = useState('');
   const [showButton, setShowButton] = useState(true);
@@ -27,12 +26,12 @@ function CustomCardBuscarServicioC(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-    const handleClickContratar = (eid) => {
-      navigate(`/contratar/${eid}`);
-    };
+  const handleClickContratar = (eid) => {
+    navigate(`/contratar/${eid}`);
+  };
 
   return (
-    <Card style={{ width: '200px' }}>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>
           Nombre Trabajador: {props.nombre} {props.apellido}

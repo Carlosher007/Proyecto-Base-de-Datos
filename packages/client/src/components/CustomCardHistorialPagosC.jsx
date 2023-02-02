@@ -12,7 +12,7 @@ import {
 
 function CustomCardHistorialPagosC(props) {
   return (
-    <Card style={{ width: '200px' }}>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>
           Fecha: {props.fecha_transaccion.split('T')[0]}

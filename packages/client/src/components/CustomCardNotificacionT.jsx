@@ -10,9 +10,9 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-function CustomCardNotificacionT (props) {
+function CustomCardNotificacionT(props) {
   return (
-    <Card style={{ width: '200px' }}>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>Fecha: {props.fecha.split('T')[0]}</Heading>
       </CardHeader>
@@ -24,4 +24,4 @@ function CustomCardNotificacionT (props) {
   );
 }
 
-export default CustomCardNotificacionT ;
+export default CustomCardNotificacionT;

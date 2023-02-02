@@ -43,7 +43,7 @@ function CustomCardMisServiciosT(props) {
   };
 
   return (
-    <Card>
+    <Card style={{ width: '270px' }}>
       <CardHeader>
         <Heading size='md'>Fecha: {props.fecha_i.split('T')[0]}</Heading>
       </CardHeader>

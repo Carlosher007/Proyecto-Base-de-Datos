@@ -50,6 +50,6 @@ router.put('/finalizarContrato/:cid',finalizarContrato);
 
 router.get('/laboresDisponibles',laboresDisponibles);
 
-router.get('/infoServicio', infoServicio);
+router.get('/infoServicio/:eid', infoServicio);
 
 module.exports = router;

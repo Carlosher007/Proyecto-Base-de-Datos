@@ -256,7 +256,7 @@ const laboresDisponibles = async (req,res) => {
 
 const infoServicio = async (req,res) => {
   try{
-    const {eid} = req.body;
+    const {eid} = req.params;
     
     const result = await pool.query('SELECT * FROM infoServicio WHERE ejerce_id = $1;', [eid]);
     res.json(result.rows);

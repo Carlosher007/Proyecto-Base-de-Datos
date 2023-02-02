@@ -117,8 +117,6 @@ const RegistroC = () => {
           formData.append('tipo', 'Debito');
         }
 
-        console.log(formData)
-
         fetch('http://localhost:8000/auth/registroC', {
           method: 'POST',
           body: formData,
@@ -214,6 +212,7 @@ const RegistroC = () => {
                 type='file'
                 className='p-2 border rounded'
                 onChange={handleChange}
+                accept="image/*"
               />
             </div>
           </form>

@@ -1,7 +1,11 @@
 /** @format */
-const { formSchemaLoginT, formSchemaRegistroT } = require('../common/index');
+const {
+  formSchemaLoginT,
+  formSchemaRegistroT,
+  formSchemaRegistroC,
+} = require('../common/index');
 
-const validateFormLoginT = (req, res, next) => {
+module.exports.validateFormLoginT = (req, res, next) => {
   const formData = req.body;
   formSchemaLoginT
     .validate(formData)
@@ -18,8 +22,8 @@ const validateFormLoginT = (req, res, next) => {
     });
 };
 
-const validateFormRegisterT = (req, res) => {
-  console.log(req.body)
+module.exports.validateFormRegisterT = (req, res, next) => {
+  console.log(req.body);
   const formData = req.body;
   formSchemaRegistroT
     .validate(formData)
@@ -31,8 +35,31 @@ const validateFormRegisterT = (req, res) => {
       if (valid) {
         // res.status(200).send();
         console.log('form is good');
+        next();
+      } else {
+        res.status(422).send();
       }
     });
 };
 
-(module.exports = validateFormLoginT), validateFormRegisterT;
+module.exports.validateFormRegisterC = (req, res, next) => {
+  console.log(req.body);
+  const formData = req.body;
+  formSchemaRegistroC
+    .validate(formData)
+    .catch((err) => {
+      res.status(422).send();
+      console.log(err.errors);
+    })
+    .then((valid) => {
+      if (valid) {
+        // res.status(200).send();
+        console.log('form is good');
+        next();
+      } else {
+        res.status(422).send();
+      }
+    });
+};
+
+// (module.exports = validateFormLoginT), validateFormRegisterT;

@@ -1,9 +1,12 @@
 /** @format */
 
 const express = require('express');
-const validateFormRegisterT = require('../controllers/validateForm');
-const validateFormLoginT = require('../controllers/validateForm');
-const validateFormRegisterC = require('../controllers/validateForm');
+const {
+  validateFormLoginT,
+  validateFormRegisterT,
+  validateFormRegisterC,
+} = require('../controllers/validateForm');
+
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -34,12 +37,17 @@ router
   .get(handleLoginC)
   .post(validateFormLoginT, attemptLoginC);
 
-router.post('/registroC', controller.multerC, attempRegisterC);
+router.post(
+  '/registroC',
+  controller.multerC,
+  validateFormRegisterC,
+  attempRegisterC
+);
 
 router.get('/logout', attemptLogout);
 
 router.post('/upload', controller.multerT, controller.uploadFile);
 
-router.post('/registroT', controller.multerT, attempRegisterT);
+router.post('/registroT', validateFormRegisterT,controller.multerT, attempRegisterT);
 
 module.exports = router;

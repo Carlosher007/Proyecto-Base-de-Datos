@@ -9,7 +9,6 @@ module.exports.handleLogin = (req, res) => {
       id: req.session.user.id,
       nombre: req.session.user.nombre,
       apellido: req.session.user.apellido,
-      foto_perfil: req.session.user.foto_perfil,
       tipo: req.session.user.tipo,
     });
   } else {
@@ -24,7 +23,6 @@ module.exports.handleLoginT = (req, res) => {
       id: req.session.user.id,
       nombre: req.session.user.nombre,
       apellido: req.session.user.apellido,
-      foto_perfil: req.session.user.foto_perfil,
       tipo: req.session.user.tipo,
     });
   } else {
@@ -39,7 +37,6 @@ module.exports.handleLoginC = (req, res) => {
       id: req.session.user.id,
       nombre: req.session.user.nombre,
       apellido: req.session.user.apellido,
-      numero_cuenta: req.session.user.numero_cuenta,
       tipo: req.session.user.tipo,
     });
   } else {
@@ -74,12 +71,11 @@ module.exports.attemptLoginT = async (req, res) => {
           'SELECT u.nombre, u.apellido, t.foto_perfil FROM Usuario u JOIN Trabajador t ON u.user_id = t.user_id WHERE t.trabajador_id = $1',
           [trabajadorId]
         );
-        const { nombre, apellido, foto_perfil } = trabajadorData.rows[0];
+        const { nombre, apellido } = trabajadorData.rows[0];
         req.session.user = {
           id: trabajadorId,
           nombre: nombre,
           apellido: apellido,
-          foto_perfil: foto_perfil,
           tipo: 'trabajador',
         };
         res.json({
@@ -87,7 +83,6 @@ module.exports.attemptLoginT = async (req, res) => {
           id: trabajadorId,
           nombre: nombre,
           apellido: apellido,
-          foto_perfil: foto_perfil,
           tipo: 'trabajador',
         });
         console.log('logeado');
@@ -138,20 +133,22 @@ module.exports.attemptLoginC = async (req, res) => {
           'SELECT u.nombre, u.apellido, c.numero_cuenta FROM Usuario u JOIN Cliente c ON u.user_id = c.user_id WHERE c.cliente_id = $1',
           [clienteId]
         );
-        const { nombre, apellido, numero_cuenta } = clienteData.rows[0];
+        const { nombre, apellido } = clienteData.rows[0];
         req.session.user = {
           id: clienteId,
           nombre: nombre,
           apellido: apellido,
-          numero_cuenta: numero_cuenta,
           tipo: 'cliente',
         };
+
+        console.log(req.session.user);
+        console.log(req.session);
+
         res.json({
           loggedIn: true,
           id: clienteId,
           nombre: nombre,
           apellido: apellido,
-          numero_cuenta: numero_cuenta,
           tipo: 'cliente',
         });
         console.log('logeado');
@@ -174,20 +171,6 @@ module.exports.attemptLoginC = async (req, res) => {
     });
   }
 };
-
-// const storage = multer.diskStorage({
-//   destination: path.join(__dirname, '../public/uploads'),
-//   filename: (req, file, cb) => {
-//     const {celular} = req.body;
-//     cb(null, `${celular}${file.fieldname}${path.extname(file.originalname)}`);
-//   }
-// });
-
-// module.exports.multerTrabajador = multer({
-//   storage,
-//   dest: path.join(__dirname, '../public/uploads')
-// }).fields([{name:'foto_pefil', maxCount:1}, {name:'doc_foto', maxCount:1}])
-
 
 module.exports.attempRegisterT = async (req, res) => {
   //Verificamos los valores unicos
@@ -216,7 +199,6 @@ module.exports.attempRegisterT = async (req, res) => {
         const hashedPass = await bcrypt.hash(req.body.contrasena, 10);
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
-        //concatenamos el numero de cuenta al final de foto perfil
 
         await pool.query(
           'CALL crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -229,7 +211,7 @@ module.exports.attempRegisterT = async (req, res) => {
             req.body.longitud,
             req.body.direccion,
             req.files.doc_foto[0].filename,
-            req.files.foto_perfil[0].filename, 
+            req.files.foto_perfil[0].filename,
             req.body.cuenta,
             req.body.celular,
           ]
@@ -248,7 +230,6 @@ module.exports.attempRegisterT = async (req, res) => {
           id: newTrabajador.rows[0].trabajador_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
-          foto_perfil: req.body.foto_perfil,
           tipo: 'trabajador',
         };
         res.json({
@@ -256,7 +237,6 @@ module.exports.attempRegisterT = async (req, res) => {
           id: newTrabajador.rows[0].trabajador_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
-          foto_perfil: req.body.foto_perfil,
           tipo: 'trabajador',
         });
       }
@@ -302,7 +282,7 @@ module.exports.attempRegisterC = async (req, res) => {
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
-        console.log(  req.body.tipo);
+        console.log(req.body.tipo);
         console.log(req.body);
 
         await pool.query(
@@ -331,19 +311,22 @@ module.exports.attempRegisterC = async (req, res) => {
           [newUsuario.rows[0].user_id]
         );
 
+        console.log('cliente' + newCliente.rows[0].cliente_id);
+
         req.session.user = {
           id: newCliente.rows[0].cliente_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
-          numero_cuenta: hashedMedioPago,
           tipo: 'cliente',
         };
+        console.log(req.session.user);
+        console.log(req.session);
+
         res.json({
           loggedIn: true,
           id: newCliente.rows[0].cliente_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
-          numero_cuenta: hashedMedioPago,
           tipo: 'cliente',
         });
       }

@@ -99,6 +99,7 @@ const RegistroT = () => {
         // actions.resetForm();
         fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',
+          credentials: 'include',
           body: formData,
         })
           .catch((err) => {

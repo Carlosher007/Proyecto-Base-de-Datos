@@ -21,7 +21,7 @@ const io = new Server(server, {
   },
 }); // es una instancia de socket.io, que es una biblioteca que permite la comunicación en tiempo real entre el cliente y el servidor.
 
-//const redisClient = new Redis();
+const redisClient = new Redis();
 
 app.use(helmet());
 
@@ -40,7 +40,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     credentials: true,
     name: 'sid',
-    //store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({ client: redisClient }),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -60,6 +60,8 @@ app.get('/', (req, res) => {
 });
 
 // io.on('connect', (socket) => {});
+
+io.on('connect', (socket) => {});
 
 server.listen(8000, () => {
   console.log('listening on port :8000');

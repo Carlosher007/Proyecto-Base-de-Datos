@@ -119,6 +119,7 @@ const RegistroC = () => {
 
         fetch('http://localhost:8000/auth/registroC', {
           method: 'POST',
+          credentials:'include',
           body: formData,
         })
           .catch((err) => {

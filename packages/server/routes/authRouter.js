@@ -6,21 +6,7 @@ const validateFormLoginT = require('../controllers/validateForm');
 const validateFormRegisterC = require('../controllers/validateForm');
 const router = express.Router();
 const multer = require('multer');
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-const upload = multer({ storage });
-
+const path = require('path');
 
 const {
   handleLogin,
@@ -30,13 +16,13 @@ const {
   attemptLoginC,
   attempRegisterT,
   attempRegisterC,
-  attemptLogout
+  attemptLogout,
+  // multerTrabajador
 } = require('../controllers/authController');
 
-router
-  .route('/login')
-  .get(handleLogin)
+const controller = require('./upload.js');
 
+router.route('/login').get(handleLogin);
 
 router
   .route('/loginT')
@@ -48,11 +34,12 @@ router
   .get(handleLoginC)
   .post(validateFormLoginT, attemptLoginC);
 
-
-router.post('/registroT', validateFormRegisterT, attempRegisterT)
-
-router.post('/registroC', validateFormRegisterC, attempRegisterC);
+router.post('/registroC', controller.multerC, attempRegisterC);
 
 router.get('/logout', attemptLogout);
+
+router.post('/upload', controller.multerT, controller.uploadFile);
+
+router.post('/registroT', controller.multerT, attempRegisterT);
 
 module.exports = router;

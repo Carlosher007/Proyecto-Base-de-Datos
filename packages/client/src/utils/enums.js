@@ -7,8 +7,8 @@ const Enum_Labores = {
 };
 
 const Enum_Medio_Pago = {
-  DEBITO: 'Débito',
-  CREDITO: 'Crédito',
+  DEBITO: 'Debito',
+  CREDITO: 'Credito',
 }
 
 const Enum_Tipo_Pago = {

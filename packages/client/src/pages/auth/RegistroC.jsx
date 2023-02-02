@@ -26,10 +26,15 @@ import { toast } from 'react-toastify';
 const RegistroC = () => {
   const { setUser } = useContext(AccountContext);
   const [selectedType, setSelectedType] = useState('');
+  const [file, setFile] = useState(null);
 
   const [error, setError] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+  };
 
   const geocodeAddress = async (address) => {
     try {
@@ -56,6 +61,10 @@ const RegistroC = () => {
   };
 
   const handleSubmit = async (values, actions) => {
+    if (!file) {
+      toast.error('Debe elegir una imágen');
+      return;
+    }
     const direccion = values.direccion;
     if (direccion) {
       try {
@@ -76,23 +85,43 @@ const RegistroC = () => {
         values.longitud = response.lng;
         //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
         const vals = { ...values };
+
         // actions.resetForm();
-        if (selectedType === '' || selectedType === undefined || selectedType === null) {
+        if (
+          selectedType === '' ||
+          selectedType === undefined ||
+          selectedType === null
+        ) {
           toast.error('Debe seleccionar un tipo de cuenta');
           return;
         }
-        if (selectedType === 1 || selectedType === '1'  ) {
+        if (selectedType === 1 || selectedType === '1') {
           vals.tipo = 'Credito';
         } else {
           vals.tipo = 'Debito';
         }
+        const formData = new FormData();
+        formData.append('recibo', file);
+        formData.append('nombre', vals.nombre);
+        formData.append('apellido', vals.apellido);
+        formData.append('email', vals.email);
+        formData.append('contrasena', vals.contrasena);
+        formData.append('numero_cuenta', vals.numero_cuenta);
+        formData.append('direccion', vals.direccion);
+        formData.append('longitud', vals.longitud);
+        formData.append('latitud', vals.latitud);
+        formData.append('celular', vals.celular);
+        if (selectedType === 1 || selectedType === '1') {
+          formData.append('tipo', 'Credito');
+        } else {
+          formData.append('tipo', 'Debito');
+        }
+
+        console.log(formData)
+
         fetch('http://localhost:8000/auth/registroC', {
           method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(vals),
+          body: formData,
         })
           .catch((err) => {
             return;
@@ -177,7 +206,18 @@ const RegistroC = () => {
           autoComplete='off'
           label='Contrasena'
         />
-        <FileUpload name='recibo' label='Foto del recibo' />
+        <div>
+          <form className='w-full max-w-sm'>
+            <div className='mb-5'>
+              Foto Documento
+              <input
+                type='file'
+                className='p-2 border rounded'
+                onChange={handleChange}
+              />
+            </div>
+          </form>
+        </div>
         <RadioGroup onChange={(value) => setSelectedType(value)}>
           <Stack spacing={5} direction='row'>
             <Radio colorScheme='red' value='1'>

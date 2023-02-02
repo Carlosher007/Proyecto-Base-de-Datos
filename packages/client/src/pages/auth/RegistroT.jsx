@@ -16,10 +16,19 @@ import { toast } from 'react-toastify';
 
 const RegistroT = () => {
   const { setUser } = useContext(AccountContext);
-
+  const [file, setFile] = useState(null);
+  const [file2, setFile2] = useState(null);
   const [error, setError] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleChange2 = (event) => {
+    setFile2(event.target.files[0]);
+  };
 
   const geocodeAddress = async (address) => {
     try {
@@ -46,6 +55,11 @@ const RegistroT = () => {
   };
 
   const handleSubmit = async (values, actions) => {
+    if (!file || !file2) {
+      toast.error('Debe elegir ambas imágenes');
+      return;
+    }
+
     const direccion = values.direccion;
     if (direccion) {
       try {
@@ -67,14 +81,25 @@ const RegistroT = () => {
         //aqui podrias hacer una peticion POST para guardar los datos del usuario en tu servidor
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
+
+        const formData = new FormData();
+        formData.append('doc_foto', file);
+        formData.append('foto_perfil', file2);
+        formData.append('nombre', vals.nombre);
+        formData.append('apellido', vals.apellido);
+        formData.append('email', vals.email);
+        formData.append('contrasena', vals.contrasena);
+        formData.append('cuenta', vals.cuenta);
+        formData.append('direccion', vals.direccion);
+        formData.append('latitud', vals.latitud);
+        formData.append('longitud', vals.longitud);
+        formData.append('celular', vals.celular);
+        formData.append('tipo', vals.tipo);
+        formData.append('precio', vals.precio);
         // actions.resetForm();
         fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(vals),
+          body: formData,
         })
           .catch((err) => {
             return;
@@ -91,7 +116,7 @@ const RegistroT = () => {
             if (data.status) {
               setError(data.status);
               toast.warning(data.status);
-            } else  {
+            } else {
               navigate('/elegirLaborT');
             }
           });
@@ -106,100 +131,118 @@ const RegistroT = () => {
 
   const navigate = useNavigate();
   return (
-    <Formik
-      initialValues={{
-        nombre: '',
-        apellido: '',
-        email: '',
-        contrasena: '',
-        foto_perfil: '',
-        doc_foto: '',
-        cuenta: '',
-        direccion: '',
-        longitud: '',
-        latitud: '',
-        celular: '',
-      }}
-      validationSchema={formSchemaRegistroT}
-      onSubmit={handleSubmit}
-    >
-      <VStack
-        as={Form}
-        w={{ base: '90%', md: '500px' }}
-        m='auto'
-        justify='center'
-        spacing='1rem'
+    <div>
+      <Formik
+        initialValues={{
+          nombre: '',
+          apellido: '',
+          email: '',
+          contrasena: '',
+          cuenta: '',
+          direccion: '',
+          longitud: '',
+          latitud: '',
+          celular: '',
+        }}
+        validationSchema={formSchemaRegistroT}
+        onSubmit={handleSubmit}
       >
-        <Heading>Sign Up</Heading>
-        <Text as='p' color='red.500'>
-          {error}
-        </Text>
-        <TextField
-          name='nombre'
-          placeholder='Digite el nombre'
-          autoComplete='off'
-          label='Nombre'
-        />
-        <TextField
-          name='apellido'
-          placeholder='Digite el apellido'
-          autoComplete='off'
-          label='Apellido'
-        />
-        <TextField
-          name='email'
-          placeholder='Digite el email'
-          autoComplete='off'
-          label='Email'
-        />
-        <TextField
-          type='password'
-          name='contrasena'
-          placeholder='Digite la contraseña'
-          autoComplete='off'
-          label='Contrasena'
-        />
-        <FileUpload name='foto_perfil' label='Foto de perfil' />
-        <FileUpload name='doc_foto' label='Foto de documento' />
-        <TextField
-          name='cuenta'
-          placeholder='Digite el numero de cuenta'
-          autoComplete='off'
-          label='Numero de cuenta'
-        />
-        <TextField
-          name='celular'
-          placeholder='Digite el celular'
-          autoComplete='off'
-          label='Numero de celular'
-        />
-        <TextField
-          name='direccion'
-          placeholder='Ingresa tu dirección'
-          label='Dirección'
-          autoComplete='off'
-          // value={direccion}
-          // onChange={handleChange}
-        />
-        {openAlert && (
-          <Alert severity='error' onClose={() => setOpenAlert(false)}>
-            {errorMessage}
-          </Alert>
-        )}
-        <ButtonGroup pt='1rem'>
-          <Button colorScheme='teal' type='submit'>
-            Create Account
-          </Button>
-          <Button
-            onClick={() => navigate('/loginT')}
-            leftIcon={<ArrowBackIcon />}
-          >
-            Back
-          </Button>
-        </ButtonGroup>
-      </VStack>
-      {/* </div> */}
-    </Formik>
+        <VStack
+          as={Form}
+          w={{ base: '90%', md: '500px' }}
+          m='auto'
+          justify='center'
+          spacing='1rem'
+        >
+          <Heading>Sign Up</Heading>
+          <Text as='p' color='red.500'>
+            {error}
+          </Text>
+          <TextField
+            name='nombre'
+            placeholder='Digite el nombre'
+            autoComplete='off'
+            label='Nombre'
+          />
+          <TextField
+            name='apellido'
+            placeholder='Digite el apellido'
+            autoComplete='off'
+            label='Apellido'
+          />
+          <TextField
+            name='email'
+            placeholder='Digite el email'
+            autoComplete='off'
+            label='Email'
+          />
+          <TextField
+            type='password'
+            name='contrasena'
+            placeholder='Digite la contraseña'
+            autoComplete='off'
+            label='Contrasena'
+          />
+          <div>
+            <form className='w-full max-w-sm'>
+              <div className='mb-5'>
+                Foto Documento
+                <input
+                  type='file'
+                  className='p-2 border rounded'
+                  onChange={handleChange}
+                />
+              </div>
+              <div className='mb-5'>
+                Foto De Perfil
+                <input
+                  type='file'
+                  className='p-2 border rounded'
+                  onChange={handleChange2}
+                />
+              </div>
+            </form>
+          </div>
+          <TextField
+            name='cuenta'
+            placeholder='Digite el numero de cuenta'
+            autoComplete='off'
+            label='Numero de cuenta'
+          />
+          <TextField
+            name='celular'
+            placeholder='Digite el celular'
+            autoComplete='off'
+            label='Numero de celular'
+          />
+          <TextField
+            name='direccion'
+            placeholder='Ingresa tu dirección'
+            label='Dirección'
+            autoComplete='off'
+            // value={direccion}
+            // onChange={handleChange}
+          />
+          {openAlert && (
+            <Alert severity='error' onClose={() => setOpenAlert(false)}>
+              {errorMessage}
+            </Alert>
+          )}
+          <ButtonGroup pt='1rem'>
+            <Button colorScheme='teal' type='submit'>
+              Create Account
+            </Button>
+            <Button
+              onClick={() => navigate('/loginT')}
+              leftIcon={<ArrowBackIcon />}
+            >
+              Back
+            </Button>
+          </ButtonGroup>
+        </VStack>
+        {/* </div> */}
+      </Formik>
+    </div>
   );
 };
 

@@ -175,6 +175,20 @@ module.exports.attemptLoginC = async (req, res) => {
   }
 };
 
+// const storage = multer.diskStorage({
+//   destination: path.join(__dirname, '../public/uploads'),
+//   filename: (req, file, cb) => {
+//     const {celular} = req.body;
+//     cb(null, `${celular}${file.fieldname}${path.extname(file.originalname)}`);
+//   }
+// });
+
+// module.exports.multerTrabajador = multer({
+//   storage,
+//   dest: path.join(__dirname, '../public/uploads')
+// }).fields([{name:'foto_pefil', maxCount:1}, {name:'doc_foto', maxCount:1}])
+
+
 module.exports.attempRegisterT = async (req, res) => {
   //Verificamos los valores unicos
   const celularExiste = await pool.query(
@@ -203,8 +217,6 @@ module.exports.attempRegisterT = async (req, res) => {
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
-        req.body.foto_perfil = req.body.foto_perfil + req.body.cuenta;
-        req.body.doc_foto = req.body.doc_foto + req.body.cuenta;
 
         await pool.query(
           'CALL crear_trabajador($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -216,8 +228,8 @@ module.exports.attempRegisterT = async (req, res) => {
             req.body.latitud,
             req.body.longitud,
             req.body.direccion,
-            req.body.foto_perfil,
-            req.body.doc_foto,
+            req.files.doc_foto[0].filename,
+            req.files.foto_perfil[0].filename, 
             req.body.cuenta,
             req.body.celular,
           ]
@@ -290,7 +302,8 @@ module.exports.attempRegisterC = async (req, res) => {
         req.body.latitud = parseFloat(req.body.latitud);
         req.body.longitud = parseFloat(req.body.longitud);
         //concatenamos el numero de cuenta al final de foto perfil
-        req.body.recibo = req.body.recibo + req.body.numero_cuenta;
+        console.log(  req.body.tipo);
+        console.log(req.body);
 
         await pool.query(
           'CALL crear_cliente($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
@@ -302,7 +315,7 @@ module.exports.attempRegisterC = async (req, res) => {
             req.body.latitud,
             req.body.longitud,
             req.body.direccion,
-            req.body.recibo,
+            req.files.recibo[0].filename,
             req.body.celular,
             hashedMedioPago,
             req.body.tipo,

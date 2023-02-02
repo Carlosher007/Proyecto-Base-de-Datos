@@ -19,6 +19,7 @@ const validateFormLoginT = (req, res, next) => {
 };
 
 const validateFormRegisterT = (req, res) => {
+  console.log(req.body)
   const formData = req.body;
   formSchemaRegistroT
     .validate(formData)

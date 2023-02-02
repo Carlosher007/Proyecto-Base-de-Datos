@@ -20,7 +20,7 @@ function CustomCardHistorialPagosC(props) {
       </CardHeader>
       <CardBody>
         <Text>monto: {props.monto_transaccion}</Text>
-        <Text>Cuenta que recibio el pago: {props.cuenta_recibio}</Text>
+        <Text>Cuenta: {props.cuenta_recibio}</Text>
         <Text>Labor realizada: {props.labor_}</Text>
       </CardBody>
     </Card>

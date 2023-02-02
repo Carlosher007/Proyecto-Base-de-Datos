@@ -82,6 +82,16 @@ const RegistroT = () => {
         // alert(JSON.stringify(values, null, 2));
         const vals = { ...values };
 
+        if (!isNaN(vals.celular) || vals.celular>0) {
+          toast.warning('El celular debe ser un número');
+          return;
+        }
+        //lo mismo para cuenta
+        if (!isNaN(vals.cuenta) || vals.cuenta>0) {
+          toast.warning('La cuenta debe ser un número');
+          return;
+        }
+
         const formData = new FormData();
         formData.append('doc_foto', file);
         formData.append('foto_perfil', file2);
@@ -95,7 +105,6 @@ const RegistroT = () => {
         formData.append('longitud', vals.longitud);
         formData.append('celular', vals.celular);
         formData.append('tipo', vals.tipo);
-        formData.append('precio', vals.precio);
         // actions.resetForm();
         fetch('http://localhost:8000/auth/registroT', {
           method: 'POST',

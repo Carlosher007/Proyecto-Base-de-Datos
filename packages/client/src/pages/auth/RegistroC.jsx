@@ -100,6 +100,17 @@ const RegistroC = () => {
         } else {
           vals.tipo = 'Debito';
         }
+
+        if (!isNaN(vals.celular) || vals.celular > 0) {
+          toast.warning('El celular debe ser un número');
+          return;
+        }
+        //lo mismo para cuenta
+        if (!isNaN(vals.numero_cuenta) || vals.numero_cuenta > 0) {
+          toast.warning('La cuenta debe ser un número');
+          return;
+        }
+
         const formData = new FormData();
         formData.append('recibo', file);
         formData.append('nombre', vals.nombre);
@@ -119,7 +130,7 @@ const RegistroC = () => {
 
         fetch('http://localhost:8000/auth/registroC', {
           method: 'POST',
-          credentials:'include',
+          credentials: 'include',
           body: formData,
         })
           .catch((err) => {
@@ -213,7 +224,7 @@ const RegistroC = () => {
                 type='file'
                 className='p-2 border rounded'
                 onChange={handleChange}
-                accept="image/*"
+                accept='image/*'
               />
             </div>
           </form>

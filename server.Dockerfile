@@ -6,5 +6,6 @@ WORKDIR /server
 COPY ./packages/server .
 
 RUN npm install
+RUN yarn add bcrypt
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]

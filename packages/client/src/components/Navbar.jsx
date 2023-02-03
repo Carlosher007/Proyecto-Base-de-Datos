@@ -125,13 +125,15 @@ function Navbar({ condition }) {
           <h3>
             {user.nombre} : {user.tipo}
           </h3>
-          <div className='perfil-container'>
+          {
+            user.tipo == 'trabajador' ? <div className='perfil-container'>
             <img
               src={fotoPerfil}
               alt='Foto de Perfil'
               className='perfil-foto'
             />
-          </div>
+            </div> : <></>
+          }
           <ToggleColorMode />
           {user.tipo == 'trabajador' ? workerNav() : userNav()}
           <button className='nav-btn' onClick={showNavbar}>

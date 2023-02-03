@@ -29,6 +29,8 @@ services:
       - DB_HOST=database
       - DB_PORT=5432
       - DB_DATABASE=mande
+    volumes:
+      - ./packages/server/uploads:./uploads
 
   frontend:
     build:

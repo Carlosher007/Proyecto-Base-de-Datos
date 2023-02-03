@@ -66,7 +66,8 @@ $BODY$
   DECLARE usuario_t INTEGER;
   DECLARE usuario_c INTEGER;
 BEGIN
-  SELECT direccion INTO direccion_ FROM Coordenada WHERE coor_id = (SELECT coor_id FROM Usuario WHERE user_id = NEW.cliente_id);
+  SELECT user_id INTO usuario_c FROM Cliente WHERE cliente_id = NEW.cliente_id;
+  SELECT direccion INTO direccion_ FROM Coordenada WHERE coor_id = (SELECT coor_id FROM Usuario WHERE user_id = usuario_c);
   SELECT labor INTO labor_ FROM Labor WHERE labor_id = (SELECT labor_id FROM Ejerce WHERE ejerce_id = NEW.ejerce_id);
   SELECT (CASE
   WHEN NEW.fecha_f IS NULL THEN 'Contrato'
@@ -76,7 +77,7 @@ BEGIN
   -- Usuario asociado a ese trabajador
   SELECT user_id INTO usuario_t FROM Trabajador WHERE trabajador_id = trabajador_id_;
   -- Usuario asociado a ese cliente
-    SELECT user_id INTO usuario_c FROM Cliente WHERE cliente_id = NEW.cliente_id;
+    
   INSERT INTO Notificacion (fecha, mensaje, asunto, user_id)
   VALUES (
   NOW(), 

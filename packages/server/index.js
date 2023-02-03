@@ -10,8 +10,6 @@ const authRouter = require('./routes/authRouter'); //este es un enrutador person
 const morgan = require('morgan');
 const routes = require('./routes/tasks.routes');
 require('dotenv').config();
-const Redis = require('ioredis');
-const RedisStore = require('connect-redis')(session);
 const server = require('http').createServer(app);
 const path = require('path');
 
@@ -22,7 +20,6 @@ const io = new Server(server, {
   },
 }); // es una instancia de socket.io, que es una biblioteca que permite la comunicación en tiempo real entre el cliente y el servidor.
 
-const redisClient = new Redis();
 
 app.use(helmet());
 
@@ -43,7 +40,6 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     credentials: true,
     name: 'sid',
-    store: new RedisStore({ client: redisClient }),
     resave: false,
     saveUninitialized: false,
     cookie: {

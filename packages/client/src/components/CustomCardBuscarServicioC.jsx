@@ -41,7 +41,7 @@ function CustomCardBuscarServicioC(props) {
         {/* sSi criterio es distancia ponemos primero la distancia, si es precio ponemos primero el precio y si es calificaicon ponemos primero la calificaicon */}
         {criterio === 'distancia' && (
           <>
-            <Text>Distancia: {props.distancia}</Text>
+            <Text>Distancia: {Math.round(parseFloat(props.distancia))/1000} Km</Text>
             <Text>
               Calificacion:{' '}
               {props.calificacion === null
@@ -61,7 +61,7 @@ function CustomCardBuscarServicioC(props) {
         {criterio === 'precio' && (
           <>
             <Text>Precio: {props.precio}</Text>
-            <Text>Distancia: {props.distancia}</Text>
+            <Text>Distancia: {Math.round(parseFloat(props.distancia))/1000} Km</Text>
             <Text>
               Calificacion:{' '}
               {props.calificacion === null
@@ -85,7 +85,7 @@ function CustomCardBuscarServicioC(props) {
                 ? 'El trabajador aún no ha sido calificado'
                 : props.calificacion}
             </Text>
-            <Text>Distancia: {props.distancia}</Text>
+            <Text>Distancia: {Math.round(parseFloat(props.distancia))/1000} Km</Text>
             <Text>Precio: {props.precio}</Text>
             <Text>
               Modalidad de cobro:{' '}

@@ -23,14 +23,8 @@ services:
       - 8000:8000
     depends_on:
       - database
-    environment:
-      - DB_USER=root
-      - DB_PASSWORD=admin
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_DATABASE=mande
     volumes:
-      - ./packages/server/uploads:./uploads
+      - ./packages/server/uploads:/server/uploads
 
   frontend:
     build:

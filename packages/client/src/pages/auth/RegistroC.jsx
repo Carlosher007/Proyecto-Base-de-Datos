@@ -222,7 +222,7 @@ const RegistroC = () => {
         <div>
           <form className='w-full max-w-sm'>
             <div className='mb-5'>
-              Foto Documento
+              Recibo
               <input
                 type='file'
                 className='p-2 border rounded'

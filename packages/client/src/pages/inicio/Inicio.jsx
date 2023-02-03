@@ -30,7 +30,7 @@ const Inicio = () => {
         <Card
           image={trabajador}
           title='Trabajador'
-          text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae quaerat ex nobis. Doloribus, deleniti?'
+          text='Únete a Mande como trabajador y ofrece tus habilidades y servicios en el hogar. Regístrate y publica las labores que puedes realizar, incluyendo una descripción y precio.'
           link='/loginT'
           // handleClick={handleTrabajador}
         />
@@ -38,7 +38,7 @@ const Inicio = () => {
         <Card
           image={usuario}
           title='Cliente'
-          text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae quaerat ex nobis. Doloribus, deleniti?'
+          text='Busca expertos y trabajadores confiables en el hogar con Mande. Regístrate y encuentra la solución perfecta para tus necesidades diarias. Solicita el servicio y califica la experiencia.'
           link='/loginC'
           // handleClick={handleCLiente}
         />

@@ -3,38 +3,39 @@ services:
   database:
     restart: always
     build:
-      context: ./packages/database
+      context: .
+      dockerfile: database.Dockerfile
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_DB=mande
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=db_mande_project123
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=admin
     volumes:
-      - ./packages/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-    networks:
-      - mande_network
+      - ./packages/database/data:/var/lib/postgresql/data/
 
-  backend:
+  server:
     restart: always
-    depends_on:
-      - database
     build:
-      context: ./packages/server
+      context: .
+      dockerfile: server.Dockerfile
     ports:
       - 8000:8000
-    networks:
-      - mande_network
+    depends_on:
+      - database
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=admin
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_DATABASE=mande
 
   frontend:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
     restart: always
-    depends_on: 
-      - backend
-    build: 
-      context: ./packages/client
+    depends_on:
+      - server
     ports:
       - 3000:3000
-    networks:
-      - mande_network
-
-networks:
-  mande_network:
-    driver: bridge

@@ -49,4 +49,5 @@ router.post('/upload', controller.multerT, controller.uploadFile);
 
 router.post('/registroT',controller.multerT, attempRegisterT);
 
+
 module.exports = router;

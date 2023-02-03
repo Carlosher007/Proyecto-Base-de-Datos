@@ -3,17 +3,36 @@
 import { useRef } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useContext } from 'react';
-import { AccountContext } from '../components/AccountContex';
+// import { AccountContext } from './AccountContex';
 import { useNavigate } from 'react-router';
 import '../styles/navbar.css';
 import ToggleColorMode from './ToggleColorMode.jsx';
+import { useEffect } from 'react';
+import { useState } from 'react';
+//account context
+import { AccountContext } from './AccountContex';
 
 function Navbar({ condition }) {
-  const currentPath = window.location.pathname;
-  const navigate = useNavigate();
-
   const { user, setUser } = useContext(AccountContext);
   const navRef = useRef();
+  const currentPath = window.location.pathname;
+  const navigate = useNavigate();
+  //usestate para almacenar un file (foto de perfil)
+  const [fotoPerfil, setFotoPerfil] = useState(null);
+
+  useEffect(() => {
+      const loadData = async () => {
+        if(!user || !user.id) return;
+        await loadFotoPerfil2(user.foto_perfil);
+      }
+      loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const loadFotoPerfil2 = async (tid) => {
+    setFotoPerfil(`http://localhost:8000/api/images/${tid}`);
+  }
+
 
   const showNavbar = () => {
     navRef.current.classList.toggle('responsive_nav');
@@ -55,6 +74,7 @@ function Navbar({ condition }) {
         <a href='/notificacionC'>Notificaciones</a>
         <a href='/dashboardC'>Mis servicios</a>
         <a href='/historialPagosC'>Historial de pagos</a>
+        <button onClick={desloguearse}>Salir</button>
         <button className='nav-btn nav-close-btn' onClick={showNavbar}>
           <FaTimes />
         </button>
@@ -69,6 +89,9 @@ function Navbar({ condition }) {
         <a href='/historialPagosT'>Historial de pagos</a>
         <a href='/notificacionT'>Notificaciones</a>
         <a href='/elegirLaborT'>Elegir Labor</a>
+        <div>
+        </div>
+        <button onClick={desloguearse}>Salir</button>
         <button className='nav-btn nav-close-btn' onClick={showNavbar}>
           <FaTimes />
         </button>
@@ -86,7 +109,6 @@ function Navbar({ condition }) {
     );
   }
 
-  
   return (
     <header>
       {checkDashboard(currentPath) ? (
@@ -99,11 +121,19 @@ function Navbar({ condition }) {
         </>
       ) : (
         <>
-          <h2>Mande</h2>
-          <h3>{user.nombre} : {user.tipo}</h3>
+          {/* <h2>Mande</h2> */}
+          <h3>
+            {user.nombre} : {user.tipo}
+          </h3>
+          <div className='perfil-container'>
+            <img
+              src={fotoPerfil}
+              alt='Foto de Perfil'
+              className='perfil-foto'
+            />
+          </div>
           <ToggleColorMode />
           {user.tipo == 'trabajador' ? workerNav() : userNav()}
-          <button onClick={desloguearse}>Salir</button>
           <button className='nav-btn' onClick={showNavbar}>
             <FaBars />
           </button>
@@ -115,6 +145,8 @@ function Navbar({ condition }) {
 
 export default Navbar;
 
-{/* <button className='nav-btn nav-close-btn' onClick = {showNavbar}>
+{
+  /* <button className='nav-btn nav-close-btn' onClick = {showNavbar}>
  <FaTimes />
-</button> */}
+</button> */
+}

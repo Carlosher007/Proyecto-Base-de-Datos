@@ -17,7 +17,9 @@ const {
   realizarPago,
   finalizarContrato,
   laboresDisponibles,
-  infoServicio
+  infoServicio,
+  obtenerFoto,
+  obtenerRutaFoto,
 } = require('../controllers/tasks.controller');
 
 const router = Router();
@@ -51,5 +53,9 @@ router.put('/finalizarContrato/:cid',finalizarContrato);
 router.get('/laboresDisponibles',laboresDisponibles);
 
 router.get('/infoServicio/:eid', infoServicio);
+
+router.get('/foto/:tid', obtenerFoto)
+
+router.get('/rutaFoto/:tid', obtenerRutaFoto)
 
 module.exports = router;

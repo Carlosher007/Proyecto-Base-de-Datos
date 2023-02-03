@@ -9,6 +9,7 @@ module.exports.handleLogin = (req, res) => {
       id: req.session.user.id,
       nombre: req.session.user.nombre,
       apellido: req.session.user.apellido,
+      foto_perfil: req.session.user.foto_perfil,
       tipo: req.session.user.tipo,
     });
   } else {
@@ -23,6 +24,7 @@ module.exports.handleLoginT = (req, res) => {
       id: req.session.user.id,
       nombre: req.session.user.nombre,
       apellido: req.session.user.apellido,
+      foto_perfil: req.session.user.foto_perfil,
       tipo: req.session.user.tipo,
     });
   } else {
@@ -71,11 +73,12 @@ module.exports.attemptLoginT = async (req, res) => {
           'SELECT u.nombre, u.apellido, t.foto_perfil FROM Usuario u JOIN Trabajador t ON u.user_id = t.user_id WHERE t.trabajador_id = $1',
           [trabajadorId]
         );
-        const { nombre, apellido } = trabajadorData.rows[0];
+        const { nombre, apellido, foto_perfil } = trabajadorData.rows[0];
         req.session.user = {
           id: trabajadorId,
           nombre: nombre,
           apellido: apellido,
+          foto_perfil: foto_perfil,
           tipo: 'trabajador',
         };
         res.json({
@@ -230,6 +233,7 @@ module.exports.attempRegisterT = async (req, res) => {
           id: newTrabajador.rows[0].trabajador_id,
           nombre: req.body.nombre,
           apellido: req.body.apellido,
+          foto_perfil: req.files.foto_perfil[0].filename,
           tipo: 'trabajador',
         };
         res.json({

@@ -9,8 +9,6 @@ export const AccountContext = createContext();
 
 const UserContext = ({ children }) => {
   const [user, setUser] = useState({ loggedIn: null });
-  const location = useLocation();
-  const navigate = useNavigate();
   useEffect(() => {
     fetch('http://localhost:8000/auth/login', {
       credentials: 'include',

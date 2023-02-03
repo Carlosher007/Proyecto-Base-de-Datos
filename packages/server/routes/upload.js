@@ -9,7 +9,6 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });   
 
 const multerT = multer({
   storage,
@@ -23,6 +22,7 @@ const multerC = multer({
   { name: 'recibo', maxCount: 1 },
 ]);
 
+const upload = multer({ storage: storage });   
 exports.upload = upload.single('myFile')
 
 exports.multerT = multerT

@@ -1,16 +1,16 @@
 --Añadir un trabajador
 CREATE OR REPLACE PROCEDURE crear_trabajador(
-  nombre VARCHAR(100),
-  apellido VARCHAR(100),
-  email VARCHAR(100),
-  contrasena VARCHAR(100),
+  nombre VARCHAR(255),
+  apellido VARCHAR(255),
+  email VARCHAR(255),
+  contrasena VARCHAR(255),
   latitud FLOAT,
   longitud FLOAT,
-  direccion_ VARCHAR(100),
-  foto_perfil VARCHAR(100),
-  doc_foto VARCHAR(100),
-  cuenta VARCHAR(100),
-  celular VARCHAR(100)
+  direccion_ VARCHAR(255),
+  foto_perfil VARCHAR(255),
+  doc_foto VARCHAR(255),
+  cuenta VARCHAR(255),
+  celular VARCHAR(255)
 ) AS $$
   DECLARE cid INTEGER;
 BEGIN
@@ -34,17 +34,17 @@ $$ LANGUAGE plpgsql;
 
 --Añadir un cliente
 CREATE OR REPLACE PROCEDURE crear_cliente(
-  nombre VARCHAR(100),
-  apellido VARCHAR(100),
-  email VARCHAR(100),
-  contrasena VARCHAR(100),
+  nombre VARCHAR(255),
+  apellido VARCHAR(255),
+  email VARCHAR(255),
+  contrasena VARCHAR(255),
   latitud FLOAT,
   longitud FLOAT,
-  direccion_ VARCHAR(100),
-  recibo VARCHAR(100),
-  celular VARCHAR(100),
-  num_cuenta VARCHAR(100),
-  tipo_cuenta VARCHAR(100)
+  direccion_ VARCHAR(255),
+  recibo VARCHAR(255),
+  celular VARCHAR(255),
+  num_cuenta VARCHAR(255),
+  tipo_cuenta VARCHAR(255)
 ) AS $$  
 DECLARE cid INTEGER;
 BEGIN

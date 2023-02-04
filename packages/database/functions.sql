@@ -1,5 +1,5 @@
 --Verificar que un email este en uso, devuelve true si esta en uso
-CREATE OR REPLACE FUNCTION verificar_email(email_ VARCHAR(100)) RETURNS TABLE(id INTEGER) AS $$
+CREATE OR REPLACE FUNCTION verificar_email(email_ VARCHAR(255)) RETURNS TABLE(id INTEGER) AS $$
 BEGIN
 SELECT user_id FROM Usuario U WHERE U.email = email_ INTO id;
   IF FOUND THEN
@@ -40,7 +40,7 @@ $$ LANGUAGE plpgsql;
 
 
 --Verificar que una cuenta de trabajador este en uso
-CREATE OR REPLACE FUNCTION verificar_cuenta_trabajador(numero_cuenta VARCHAR(100))
+CREATE OR REPLACE FUNCTION verificar_cuenta_trabajador(numero_cuenta VARCHAR(255))
 RETURNS TABLE (id INTEGER) AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM Trabajador WHERE cuenta = numero_cuenta) THEN
@@ -53,7 +53,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- Verificar numero_cuenta Cliente
-CREATE OR REPLACE FUNCTION verificar_cuenta_cliente(cuenta VARCHAR(100))
+CREATE OR REPLACE FUNCTION verificar_cuenta_cliente(cuenta VARCHAR(255))
 RETURNS TABLE (id INTEGER) AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM Cliente WHERE numero_cuenta = cuenta) THEN
@@ -66,7 +66,7 @@ $$ LANGUAGE plpgsql;
 
 
 --Verificar que un celular este en uso
-CREATE OR REPLACE FUNCTION verificar_celular(celular_ VARCHAR(100)) 
+CREATE OR REPLACE FUNCTION verificar_celular(celular_ VARCHAR(255)) 
 RETURNS TABLE (id INTEGER) AS $$
 BEGIN
   -- Consultar en la tabla Usuario si existe un usuario con el número de celular dado
@@ -82,8 +82,8 @@ $$ LANGUAGE plpgsql;
 
 
 -- Tabla con los servicios disponibles segun criterio.
-CREATE OR REPLACE FUNCTION buscar_trabajadores(labor_id_in INT, latitud_in FLOAT, longitud_in FLOAT,criterio VARCHAR(100)
-) RETURNS TABLE(trabajador_id INTEGER,nombre VARCHAR(100),apellido VARCHAR(100),ejerce_id INTEGER,calificacion FLOAT,precio FLOAT,tipo_trabajo VARCHAR(100), descripcion VARCHAR(100), distancia FLOAT) 
+CREATE OR REPLACE FUNCTION buscar_trabajadores(labor_id_in INT, latitud_in FLOAT, longitud_in FLOAT,criterio VARCHAR(255)
+) RETURNS TABLE(trabajador_id INTEGER,nombre VARCHAR(255),apellido VARCHAR(255),ejerce_id INTEGER,calificacion FLOAT,precio FLOAT,tipo_trabajo VARCHAR(255), descripcion VARCHAR(255), distancia FLOAT) 
 AS $$
 BEGIN
   IF criterio = 'distancia' THEN

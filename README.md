@@ -8,6 +8,8 @@
 
 ## Instrucciones para el despliegue de la aplicación.
 
+Asegurese de tener instalado docker compose para poder hacer el despliegue de los contenedores.
+
 Clone este repositorio para tener los script.
 
 ```shell 

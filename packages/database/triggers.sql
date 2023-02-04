@@ -59,9 +59,9 @@ CREATE OR REPLACE FUNCTION enviar_notificacion()
 RETURNS TRIGGER
 AS
 $BODY$
-  DECLARE direccion_ VARCHAR(255);
-  DECLARE labor_ VARCHAR(255);
-  DECLARE asunto_ VARCHAR(255);
+  DECLARE direccion_ VARCHAR(100);
+  DECLARE labor_ VARCHAR(100);
+  DECLARE asunto_ VARCHAR(100);
   DECLARE trabajador_id_ INTEGER;
   DECLARE usuario_t INTEGER;
   DECLARE usuario_c INTEGER;
